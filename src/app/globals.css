@@ -1,16 +1,16 @@
 @import "tailwindcss";
 
 @theme inline {
-  --color-base: #0F1115;
-  --color-surface: #161A21;
-  --color-widget: #1D222B;
-  --color-border-muted: #2A2F38;
-  --color-accent: #6C63FF;
-  --color-accent-hover: #8078FF;
-  --color-cyan: #22D3EE;
-  --color-amber: #F59E0B;
-  --color-text-primary: #E6E8EB;
-  --color-text-muted: #9AA4B2;
+  --color-base: var(--color-base, #0F1115);
+  --color-surface: var(--color-surface, #161A21);
+  --color-widget: var(--color-widget, #1D222B);
+  --color-border-muted: var(--color-border-muted, #2A2F38);
+  --color-accent: var(--color-accent, #6C63FF);
+  --color-accent-hover: var(--color-accent-hover, #8078FF);
+  --color-cyan: var(--color-cyan, #22D3EE);
+  --color-amber: var(--color-amber, #F59E0B);
+  --color-text-primary: var(--color-text-primary, #E6E8EB);
+  --color-text-muted: var(--color-text-muted, #9AA4B2);
   --font-sans: var(--font-inter);
   --font-mono: var(--font-geist-mono);
 }
@@ -18,12 +18,12 @@
 /* ── Global resets ── */
 * {
   scrollbar-width: thin;
-  scrollbar-color: #2A2F38 transparent;
+  scrollbar-color: var(--color-border-muted) transparent;
 }
 
 ::selection {
-  background: rgba(108, 99, 255, 0.35);
-  color: #E6E8EB;
+  background: color-mix(in srgb, var(--color-accent) 35%, transparent);
+  color: var(--color-text-primary);
 }
 
 body {
@@ -78,18 +78,18 @@ body {
   bottom: 4px;
   width: 8px;
   height: 8px;
-  border-right: 2px solid #2A2F38;
-  border-bottom: 2px solid #2A2F38;
+  border-right: 2px solid var(--color-border-muted);
+  border-bottom: 2px solid var(--color-border-muted);
   transition: border-color 200ms ease;
 }
 
 .react-grid-item:hover > .react-resizable-handle::after {
-  border-color: #6C63FF;
+  border-color: var(--color-accent);
 }
 
 .react-grid-placeholder {
-  background: rgba(108, 99, 255, 0.12) !important;
-  border: 2px dashed rgba(108, 99, 255, 0.3) !important;
+  background: color-mix(in srgb, var(--color-accent) 12%, transparent) !important;
+  border: 2px dashed color-mix(in srgb, var(--color-accent) 30%, transparent) !important;
   border-radius: 16px !important;
   opacity: 1 !important;
 }
@@ -105,10 +105,10 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #2A2F38;
+  background: var(--color-border-muted);
   border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #3A3F48;
+  background: color-mix(in srgb, var(--color-border-muted) 100%, white 15%);
 }

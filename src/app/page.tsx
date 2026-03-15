@@ -5,6 +5,8 @@ import GridBackground from "@/components/layout/GridBackground";
 import Toolbar from "@/components/layout/Toolbar";
 import ExpandedWidget from "@/components/layout/ExpandedWidget";
 import CommandPalette from "@/components/CommandPalette";
+import ThemeProvider from "@/components/ThemeProvider";
+import ThemePanel from "@/components/ThemePanel";
 
 const DashboardGrid = dynamic(
   () => import("@/components/layout/DashboardGrid"),
@@ -13,12 +15,15 @@ const DashboardGrid = dynamic(
 
 export default function Home() {
   return (
-    <div className="relative min-h-screen bg-base">
-      <GridBackground />
-      <Toolbar />
-      <DashboardGrid />
-      <ExpandedWidget />
-      <CommandPalette />
-    </div>
+    <ThemeProvider>
+      <div className="relative min-h-screen bg-base">
+        <GridBackground />
+        <Toolbar />
+        <DashboardGrid />
+        <ExpandedWidget />
+        <CommandPalette />
+        <ThemePanel />
+      </div>
+    </ThemeProvider>
   );
 }

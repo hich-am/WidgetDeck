@@ -7,9 +7,11 @@ import {
   LayoutGrid,
   Check,
   ChevronDown,
+  Paintbrush,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useDashboardStore } from "@/store/dashboardStore";
+import { useThemeStore } from "@/store/themeStore";
 import { DEFAULT_WIDGETS } from "@/config/widgets";
 import type { WidgetId } from "@/types/widget";
 
@@ -20,6 +22,7 @@ export default function Toolbar() {
     enabledWidgets,
     toggleWidget,
   } = useDashboardStore();
+  const { openThemePicker } = useThemeStore();
   const [showWidgetMenu, setShowWidgetMenu] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
@@ -105,6 +108,15 @@ export default function Toolbar() {
             )}
           </AnimatePresence>
         </div>
+
+        {/* Theme Picker */}
+        <button
+          onClick={openThemePicker}
+          className="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs text-text-muted transition-colors hover:bg-widget hover:text-accent"
+        >
+          <Paintbrush className="h-3.5 w-3.5" />
+          Theme
+        </button>
 
         {/* Reset Layout */}
         <button
