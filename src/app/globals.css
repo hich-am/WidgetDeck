@@ -1,0 +1,114 @@
+@import "tailwindcss";
+
+@theme inline {
+  --color-base: #0F1115;
+  --color-surface: #161A21;
+  --color-widget: #1D222B;
+  --color-border-muted: #2A2F38;
+  --color-accent: #6C63FF;
+  --color-accent-hover: #8078FF;
+  --color-cyan: #22D3EE;
+  --color-amber: #F59E0B;
+  --color-text-primary: #E6E8EB;
+  --color-text-muted: #9AA4B2;
+  --font-sans: var(--font-inter);
+  --font-mono: var(--font-geist-mono);
+}
+
+/* ── Global resets ── */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #2A2F38 transparent;
+}
+
+::selection {
+  background: rgba(108, 99, 255, 0.35);
+  color: #E6E8EB;
+}
+
+body {
+  background: var(--color-base);
+  color: var(--color-text-primary);
+  font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+  overflow-x: hidden;
+}
+
+/* ── React Grid Layout styles ── */
+.react-grid-layout {
+  position: relative;
+  transition: height 200ms ease;
+}
+
+.react-grid-item {
+  transition: all 200ms ease;
+  transition-property: left, top, width, height;
+}
+
+.react-grid-item.cssTransforms {
+  transition-property: transform, width, height;
+}
+
+.react-grid-item.resizing {
+  z-index: 10;
+  will-change: width, height;
+  opacity: 0.95;
+}
+
+.react-grid-item.react-draggable-dragging {
+  z-index: 100;
+  will-change: transform;
+  transition: none;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5) !important;
+  transform: scale(1.03);
+}
+
+.react-grid-item > .react-resizable-handle {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  bottom: 0;
+  right: 0;
+  cursor: se-resize;
+}
+
+.react-grid-item > .react-resizable-handle::after {
+  content: "";
+  position: absolute;
+  right: 4px;
+  bottom: 4px;
+  width: 8px;
+  height: 8px;
+  border-right: 2px solid #2A2F38;
+  border-bottom: 2px solid #2A2F38;
+  transition: border-color 200ms ease;
+}
+
+.react-grid-item:hover > .react-resizable-handle::after {
+  border-color: #6C63FF;
+}
+
+.react-grid-placeholder {
+  background: rgba(108, 99, 255, 0.12) !important;
+  border: 2px dashed rgba(108, 99, 255, 0.3) !important;
+  border-radius: 16px !important;
+  opacity: 1 !important;
+}
+
+/* ── Custom scrollbar for webkit ── */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #2A2F38;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #3A3F48;
+}
