@@ -23,7 +23,7 @@ export default function DashboardGrid() {
   );
 
   return (
-    <div ref={containerRef} className="relative z-10 min-h-screen px-4 pb-8 pt-4">
+    <div ref={containerRef} className="relative z-10 min-h-screen px-6 pb-12 pt-6">
       {mounted && (
         <ResponsiveGridLayout
           className="layout"
@@ -32,10 +32,10 @@ export default function DashboardGrid() {
           breakpoints={breakpoints}
           cols={cols}
           rowHeight={100}
-          margin={[16, 16] as const}
+          margin={[20, 20] as const}
           containerPadding={[0, 0] as const}
-          onLayoutChange={(currentLayout: Layout, allLayouts: ResponsiveLayouts) => {
-            onLayoutChange(currentLayout, allLayouts);
+          onLayoutChange={(_currentLayout: any, allLayouts: any) => {
+            onLayoutChange(_currentLayout, allLayouts as ResponsiveLayouts);
           }}
           dragConfig={{
             handle: ".widget-drag-handle",

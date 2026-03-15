@@ -120,10 +120,10 @@ export default function CommandPalette() {
         ] as WidgetId[]
       ).map((id) => ({
         id: `toggle-${id}`,
-        label: `${enabledWidgets.includes(id) ? "Hide" : "Show"} ${id.charAt(0).toUpperCase() + id.slice(1)} Widget`,
+        label: `${enabledWidgets.includes(id) ? "Hide" : "Show"} ${id.charAt(0).toUpperCase() + id.slice(1)} Module`,
         icon: LayoutGrid,
         action: () => toggleWidget(id),
-        section: "Widgets",
+        section: "Modules",
       })),
     ],
     [expandWidget, resetLayout, resetAll, toggleWidget, enabledWidgets]
@@ -200,7 +200,7 @@ export default function CommandPalette() {
       {commandPaletteOpen && (
         <>
           <motion.div
-            className="fixed inset-0 z-[60] bg-black/50 backdrop-blur-sm"
+            className="fixed inset-0 z-[60] bg-text-primary/10 backdrop-blur-sm"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -208,13 +208,14 @@ export default function CommandPalette() {
           />
 
           <motion.div
-            className="fixed left-1/2 top-[20%] z-[60] w-full max-w-lg -translate-x-1/2 overflow-hidden rounded-2xl border border-border-muted bg-widget shadow-2xl"
-            initial={{ opacity: 0, y: -20, scale: 0.95 }}
+            className="fixed left-1/2 top-[20%] z-[60] w-full max-w-lg -translate-x-1/2 overflow-hidden rounded-3xl border border-border-muted bg-widget"
+            style={{ boxShadow: "0 24px 64px rgba(0,0,0,0.1)" }}
+            initial={{ opacity: 0, y: -20, scale: 0.96 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: -20, scale: 0.95 }}
-            transition={{ type: "spring", stiffness: 400, damping: 30 }}
+            exit={{ opacity: 0, y: -20, scale: 0.96 }}
+            transition={{ type: "spring", stiffness: 350, damping: 30 }}
           >
-            <div className="flex items-center gap-3 border-b border-border-muted px-4 py-3">
+            <div className="flex items-center gap-3 border-b border-border-muted px-5 py-4">
               <Search className="h-4 w-4 text-text-muted" />
               <input
                 ref={inputRef}
@@ -227,14 +228,14 @@ export default function CommandPalette() {
                 placeholder="Type a command..."
                 className="flex-1 bg-transparent text-sm text-text-primary placeholder-text-muted outline-none"
               />
-              <kbd className="rounded bg-surface px-1.5 py-0.5 text-[10px] font-mono text-text-muted">
+              <kbd className="rounded-lg border border-border-muted px-2 py-0.5 text-[10px] font-mono text-text-muted">
                 ESC
               </kbd>
             </div>
 
             <div className="max-h-72 overflow-auto py-2">
               {filtered.length === 0 && (
-                <div className="px-4 py-6 text-center text-xs text-text-muted">
+                <div className="px-5 py-6 text-center text-xs text-text-muted">
                   No commands found
                 </div>
               )}
@@ -248,7 +249,7 @@ export default function CommandPalette() {
 
                 return (
                   <div key={section}>
-                    <div className="px-4 py-1 text-[10px] font-semibold uppercase tracking-widest text-text-muted">
+                    <div className="px-5 py-1.5 text-[10px] font-semibold uppercase tracking-widest text-text-muted">
                       {section}
                     </div>
                     {cmds.map((cmd, i) => {
@@ -259,10 +260,10 @@ export default function CommandPalette() {
                           key={cmd.id}
                           onClick={() => runCommand(cmd)}
                           onMouseEnter={() => setSelectedIndex(flatIndex)}
-                          className={`flex w-full items-center gap-3 px-4 py-2 text-left text-xs transition-colors ${
+                          className={`flex w-full items-center gap-3 px-5 py-2.5 text-left text-xs transition-colors ${
                             flatIndex === selectedIndex
-                              ? "bg-accent/10 text-accent"
-                              : "text-text-primary hover:bg-surface"
+                              ? "bg-accent/8 text-accent"
+                              : "text-text-primary hover:bg-base"
                           }`}
                         >
                           <Icon className="h-4 w-4 shrink-0" />
@@ -275,13 +276,13 @@ export default function CommandPalette() {
               })}
             </div>
 
-            <div className="flex items-center justify-between border-t border-border-muted px-4 py-2">
+            <div className="flex items-center justify-between border-t border-border-muted px-5 py-2.5">
               <div className="flex items-center gap-3 text-[10px] text-text-muted">
                 <span>
-                  <kbd className="rounded bg-surface px-1 py-0.5 font-mono">↑↓</kbd> Navigate
+                  <kbd className="rounded-lg border border-border-muted px-1 py-0.5 font-mono">↑↓</kbd> Navigate
                 </span>
                 <span>
-                  <kbd className="rounded bg-surface px-1 py-0.5 font-mono">↵</kbd> Select
+                  <kbd className="rounded-lg border border-border-muted px-1 py-0.5 font-mono">↵</kbd> Select
                 </span>
               </div>
             </div>

@@ -104,7 +104,7 @@ export default function HabitsWidget() {
                     className={`mx-auto flex h-6 w-6 items-center justify-center rounded-md transition-colors ${
                       done
                         ? "bg-opacity-100"
-                        : "bg-surface hover:bg-border-muted"
+                        : "bg-base hover:bg-border-muted"
                     }`}
                     style={done ? { backgroundColor: habit.color + "30" } : {}}
                   >

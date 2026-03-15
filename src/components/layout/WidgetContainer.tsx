@@ -45,26 +45,28 @@ export default function WidgetContainer({
 
   return (
     <motion.div
-      className="group relative flex h-full w-full flex-col overflow-hidden rounded-2xl border border-border-muted bg-widget"
+      className="group relative flex h-full w-full flex-col overflow-hidden rounded-3xl border border-border-muted bg-widget"
       style={{
-        boxShadow: "0 8px 30px rgba(0,0,0,0.35)",
+        boxShadow: "0 10px 30px rgba(0,0,0,0.06)",
       }}
       whileHover={
         !isExpanded
           ? {
-              y: -3,
-              scale: 1.01,
-              boxShadow: "0 12px 40px rgba(0,0,0,0.45)",
+              y: -4,
+              scale: 1.02,
+              boxShadow: "0 20px 50px rgba(0,0,0,0.1)",
             }
           : {}
       }
-      transition={{ type: "spring", stiffness: 400, damping: 25 }}
+      transition={{ type: "spring", stiffness: 300, damping: 25 }}
     >
       {/* Header / Drag Handle */}
-      <div className="widget-drag-handle flex h-10 shrink-0 cursor-grab items-center justify-between border-b border-border-muted px-4 active:cursor-grabbing">
-        <div className="flex items-center gap-2">
-          <IconComponent className="h-4 w-4 text-accent" />
-          <span className="text-xs font-medium tracking-wide text-text-muted">
+      <div className="widget-drag-handle flex h-12 shrink-0 cursor-grab items-center justify-between px-5 active:cursor-grabbing">
+        <div className="flex items-center gap-2.5">
+          <div className="flex h-7 w-7 items-center justify-center rounded-xl bg-accent/8">
+            <IconComponent className="h-3.5 w-3.5 text-accent" />
+          </div>
+          <span className="text-sm font-semibold tracking-tight text-text-primary">
             {title}
           </span>
         </div>
@@ -75,8 +77,8 @@ export default function WidgetContainer({
               e.stopPropagation();
               expandWidget(id);
             }}
-            className="rounded-md p-1 text-text-muted transition-colors hover:bg-surface hover:text-accent"
-            aria-label={isExpanded ? "Minimize widget" : "Expand widget"}
+            className="rounded-xl p-1.5 text-text-muted transition-colors hover:bg-base hover:text-accent"
+            aria-label={isExpanded ? "Minimize" : "Expand"}
           >
             {isExpanded ? (
               <Minimize2 className="h-3.5 w-3.5" />
@@ -88,7 +90,7 @@ export default function WidgetContainer({
       </div>
 
       {/* Content */}
-      <div className="flex-1 overflow-auto p-4">{children}</div>
+      <div className="flex-1 overflow-auto px-5 pb-5">{children}</div>
     </motion.div>
   );
 }

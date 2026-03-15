@@ -1,23 +1,22 @@
+"use client";
+
 export default function GridBackground() {
   return (
-    <div className="pointer-events-none fixed inset-0 z-0">
-      <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+    <div className="pointer-events-none fixed inset-0 z-0 overflow-hidden opacity-40">
+      <svg width="100%" height="100%">
         <defs>
           <pattern
-            id="grid"
+            id="dotGrid"
+            x="0"
+            y="0"
             width="32"
             height="32"
             patternUnits="userSpaceOnUse"
           >
-            <path
-              d="M 32 0 L 0 0 0 32"
-              fill="none"
-              stroke="rgba(255,255,255,0.04)"
-              strokeWidth="1"
-            />
+            <circle cx="1" cy="1" r="0.8" fill="currentColor" className="text-border-muted" />
           </pattern>
         </defs>
-        <rect width="100%" height="100%" fill="url(#grid)" />
+        <rect width="100%" height="100%" fill="url(#dotGrid)" />
       </svg>
     </div>
   );

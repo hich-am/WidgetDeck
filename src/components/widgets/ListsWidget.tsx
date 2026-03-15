@@ -98,7 +98,7 @@ export default function ListsWidget() {
                   initial={{ opacity: 0, y: -6 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, x: -16 }}
-                  className="group flex items-center gap-2 rounded-lg bg-surface px-2 py-1.5"
+                  className="group flex items-center gap-2 rounded-lg bg-base px-2 py-1.5"
                 >
                   <button onClick={() => toggleListItem(activeList.id, item.id)} className="shrink-0">
                     {item.done ? (

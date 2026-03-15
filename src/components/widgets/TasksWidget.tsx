@@ -108,7 +108,7 @@ function TaskRow({
       initial={{ opacity: 0, y: -8 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, x: -20 }}
-      className="group flex items-center gap-2 rounded-xl bg-surface px-3 py-2"
+      className="group flex items-center gap-2 rounded-xl bg-base px-3 py-2"
     >
       <button onClick={() => onToggle(task.id)} className="shrink-0">
         {task.done ? (

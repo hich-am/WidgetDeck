@@ -75,7 +75,7 @@ export default function PomodoroWidget() {
             cy="85"
             r={radius}
             fill="none"
-            stroke="#1D222B"
+            stroke="var(--color-border-muted)"
             strokeWidth="6"
           />
           <motion.circle
@@ -83,7 +83,7 @@ export default function PomodoroWidget() {
             cy="85"
             r={radius}
             fill="none"
-            stroke={isBreak ? "#22D3EE" : "#6C63FF"}
+            stroke={isBreak ? "var(--color-cyan)" : "var(--color-accent)"}
             strokeWidth="6"
             strokeLinecap="round"
             strokeDasharray={circumference}

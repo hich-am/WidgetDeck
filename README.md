@@ -66,7 +66,7 @@ src/
 ├── store/
 │   ├── dashboardStore.ts   # Layout & UI state
 │   └── contentStore.ts     # All user data (tasks, notes, etc.)
-└── types/widget.ts         # TypeScript types
+└── types/widget.ts         # TypeScript types 
 ```
 
 ## License

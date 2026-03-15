@@ -75,7 +75,7 @@ export default function BookmarksWidget() {
                 initial={{ opacity: 0, y: -6 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, x: -16 }}
-                className="group flex items-center gap-2 rounded-xl bg-surface px-3 py-2"
+                className="group flex items-center gap-2 rounded-xl bg-base px-3 py-2"
               >
                 {favicon ? (
                   <img src={favicon} alt="" className="h-4 w-4 shrink-0 rounded" />
