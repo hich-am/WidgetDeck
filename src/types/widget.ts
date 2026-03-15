@@ -1,18 +1,18 @@
 import type { Layout, LayoutItem, ResponsiveLayouts } from "react-grid-layout";
 
 export type WidgetId =
-  | "about"
-  | "projects"
-  | "skills"
-  | "design"
-  | "achievements"
-  | "timeline"
-  | "contact";
+  | "tasks"
+  | "notes"
+  | "calendar"
+  | "lists"
+  | "pomodoro"
+  | "habits"
+  | "bookmarks";
 
 export interface WidgetConfig {
   id: WidgetId;
   title: string;
-  icon: string; // Lucide icon name
+  icon: string;
   defaultLayout: {
     lg: LayoutItem;
     md: LayoutItem;
@@ -22,19 +22,52 @@ export interface WidgetConfig {
   minH?: number;
 }
 
-export interface DashboardState {
-  layouts: ResponsiveLayouts;
-  enabledWidgets: WidgetId[];
-  expandedWidget: WidgetId | null;
-  commandPaletteOpen: boolean;
+// ── Content Types ──
+
+export interface Task {
+  id: string;
+  title: string;
+  done: boolean;
+  priority: "low" | "medium" | "high";
+  dueDate?: string;
 }
 
-export interface DashboardActions {
-  setLayouts: (layouts: ResponsiveLayouts) => void;
-  toggleWidget: (id: WidgetId) => void;
-  expandWidget: (id: WidgetId) => void;
-  collapseWidget: () => void;
-  resetLayout: () => void;
-  openCommandPalette: () => void;
-  closeCommandPalette: () => void;
+export interface Note {
+  id: string;
+  title: string;
+  content: string;
+  updatedAt: string;
+}
+
+export interface CalEvent {
+  id: string;
+  title: string;
+  date: string; // YYYY-MM-DD
+  color: string;
+}
+
+export interface UserList {
+  id: string;
+  name: string;
+  items: ListItem[];
+}
+
+export interface ListItem {
+  id: string;
+  text: string;
+  done: boolean;
+}
+
+export interface Habit {
+  id: string;
+  name: string;
+  color: string;
+  completedDates: string[]; // YYYY-MM-DD
+}
+
+export interface Bookmark {
+  id: string;
+  title: string;
+  url: string;
+  createdAt: string;
 }
