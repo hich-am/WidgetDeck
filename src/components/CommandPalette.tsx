@@ -4,17 +4,19 @@ import { useEffect, useState, useRef, useMemo, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Search,
-  FolderGit2,
-  Palette,
-  Mail,
+  CheckSquare,
+  FileText,
+  CalendarDays,
+  List,
+  Timer,
+  Flame,
+  Bookmark,
   RotateCcw,
-  BarChart3,
-  User,
-  Trophy,
-  Clock,
   LayoutGrid,
+  Trash2,
 } from "lucide-react";
 import { useDashboardStore } from "@/store/dashboardStore";
+import { useContentStore } from "@/store/contentStore";
 import type { WidgetId } from "@/types/widget";
 
 interface Command {
@@ -35,6 +37,8 @@ export default function CommandPalette() {
     enabledWidgets,
   } = useDashboardStore();
 
+  const { resetAll } = useContentStore();
+
   const [query, setQuery] = useState("");
   const [selectedIndex, setSelectedIndex] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -42,52 +46,52 @@ export default function CommandPalette() {
   const commands: Command[] = useMemo(
     () => [
       {
-        id: "open-about",
-        label: "Open About",
-        icon: User,
-        action: () => expandWidget("about"),
+        id: "open-tasks",
+        label: "Open Tasks",
+        icon: CheckSquare,
+        action: () => expandWidget("tasks"),
         section: "Navigate",
       },
       {
-        id: "open-projects",
-        label: "Open Projects",
-        icon: FolderGit2,
-        action: () => expandWidget("projects"),
+        id: "open-notes",
+        label: "Open Notes",
+        icon: FileText,
+        action: () => expandWidget("notes"),
         section: "Navigate",
       },
       {
-        id: "open-skills",
-        label: "Open Skills",
-        icon: BarChart3,
-        action: () => expandWidget("skills"),
+        id: "open-calendar",
+        label: "Open Calendar",
+        icon: CalendarDays,
+        action: () => expandWidget("calendar"),
         section: "Navigate",
       },
       {
-        id: "open-design",
-        label: "Open Design",
-        icon: Palette,
-        action: () => expandWidget("design"),
+        id: "open-lists",
+        label: "Open Lists",
+        icon: List,
+        action: () => expandWidget("lists"),
         section: "Navigate",
       },
       {
-        id: "open-achievements",
-        label: "Open Achievements",
-        icon: Trophy,
-        action: () => expandWidget("achievements"),
+        id: "open-pomodoro",
+        label: "Open Pomodoro",
+        icon: Timer,
+        action: () => expandWidget("pomodoro"),
         section: "Navigate",
       },
       {
-        id: "open-timeline",
-        label: "Open Timeline",
-        icon: Clock,
-        action: () => expandWidget("timeline"),
+        id: "open-habits",
+        label: "Open Habits",
+        icon: Flame,
+        action: () => expandWidget("habits"),
         section: "Navigate",
       },
       {
-        id: "open-contact",
-        label: "Open Contact",
-        icon: Mail,
-        action: () => expandWidget("contact"),
+        id: "open-bookmarks",
+        label: "Open Bookmarks",
+        icon: Bookmark,
+        action: () => expandWidget("bookmarks"),
         section: "Navigate",
       },
       {
@@ -97,15 +101,22 @@ export default function CommandPalette() {
         action: () => resetLayout(),
         section: "Actions",
       },
+      {
+        id: "reset-all-data",
+        label: "Clear All Data",
+        icon: Trash2,
+        action: () => resetAll(),
+        section: "Actions",
+      },
       ...(
         [
-          "about",
-          "projects",
-          "skills",
-          "design",
-          "achievements",
-          "timeline",
-          "contact",
+          "tasks",
+          "notes",
+          "calendar",
+          "lists",
+          "pomodoro",
+          "habits",
+          "bookmarks",
         ] as WidgetId[]
       ).map((id) => ({
         id: `toggle-${id}`,
@@ -115,7 +126,7 @@ export default function CommandPalette() {
         section: "Widgets",
       })),
     ],
-    [expandWidget, resetLayout, toggleWidget, enabledWidgets]
+    [expandWidget, resetLayout, resetAll, toggleWidget, enabledWidgets]
   );
 
   const filtered = useMemo(() => {
@@ -124,7 +135,6 @@ export default function CommandPalette() {
     return commands.filter((c) => c.label.toLowerCase().includes(q));
   }, [query, commands]);
 
-  // Reset state when opening
   useEffect(() => {
     if (commandPaletteOpen) {
       setQuery("");
@@ -133,7 +143,6 @@ export default function CommandPalette() {
     }
   }, [commandPaletteOpen]);
 
-  // Global keyboard shortcut
   useEffect(() => {
     const handleKey = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key === "k") {
@@ -158,7 +167,6 @@ export default function CommandPalette() {
     [closeCommandPalette]
   );
 
-  // Keyboard navigation inside palette
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent) => {
       if (e.key === "ArrowDown") {
@@ -177,7 +185,6 @@ export default function CommandPalette() {
     [filtered, selectedIndex, runCommand, closeCommandPalette]
   );
 
-  // Group by section
   const sections = useMemo(() => {
     const map = new Map<string, Command[]>();
     for (const cmd of filtered) {
@@ -192,7 +199,6 @@ export default function CommandPalette() {
     <AnimatePresence>
       {commandPaletteOpen && (
         <>
-          {/* Backdrop */}
           <motion.div
             className="fixed inset-0 z-[60] bg-black/50 backdrop-blur-sm"
             initial={{ opacity: 0 }}
@@ -201,7 +207,6 @@ export default function CommandPalette() {
             onClick={closeCommandPalette}
           />
 
-          {/* Palette */}
           <motion.div
             className="fixed left-1/2 top-[20%] z-[60] w-full max-w-lg -translate-x-1/2 overflow-hidden rounded-2xl border border-border-muted bg-widget shadow-2xl"
             initial={{ opacity: 0, y: -20, scale: 0.95 }}
@@ -209,7 +214,6 @@ export default function CommandPalette() {
             exit={{ opacity: 0, y: -20, scale: 0.95 }}
             transition={{ type: "spring", stiffness: 400, damping: 30 }}
           >
-            {/* Search Input */}
             <div className="flex items-center gap-3 border-b border-border-muted px-4 py-3">
               <Search className="h-4 w-4 text-text-muted" />
               <input
@@ -228,7 +232,6 @@ export default function CommandPalette() {
               </kbd>
             </div>
 
-            {/* Results */}
             <div className="max-h-72 overflow-auto py-2">
               {filtered.length === 0 && (
                 <div className="px-4 py-6 text-center text-xs text-text-muted">
@@ -238,7 +241,6 @@ export default function CommandPalette() {
 
               {Array.from(sections.entries()).map(([section, cmds]) => {
                 let globalIdx = 0;
-                // Calculate flattened index offset for this section
                 for (const [s, c] of sections.entries()) {
                   if (s === section) break;
                   globalIdx += c.length;
@@ -273,7 +275,6 @@ export default function CommandPalette() {
               })}
             </div>
 
-            {/* Footer */}
             <div className="flex items-center justify-between border-t border-border-muted px-4 py-2">
               <div className="flex items-center gap-3 text-[10px] text-text-muted">
                 <span>

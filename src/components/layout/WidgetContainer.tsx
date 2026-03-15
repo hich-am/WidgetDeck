@@ -5,25 +5,25 @@ import { motion } from "framer-motion";
 import {
   Maximize2,
   Minimize2,
-  User,
-  FolderGit2,
-  BarChart3,
-  Palette,
-  Trophy,
-  Clock,
-  Mail,
+  CheckSquare,
+  FileText,
+  CalendarDays,
+  List,
+  Timer,
+  Flame,
+  Bookmark,
 } from "lucide-react";
 import type { WidgetId } from "@/types/widget";
 import { useDashboardStore } from "@/store/dashboardStore";
 
 const iconMap: Record<string, React.ElementType> = {
-  User,
-  FolderGit2,
-  BarChart3,
-  Palette,
-  Trophy,
-  Clock,
-  Mail,
+  CheckSquare,
+  FileText,
+  CalendarDays,
+  List,
+  Timer,
+  Flame,
+  Bookmark,
 };
 
 interface WidgetContainerProps {
@@ -40,7 +40,7 @@ export default function WidgetContainer({
   children,
 }: WidgetContainerProps) {
   const { expandWidget, expandedWidget } = useDashboardStore();
-  const IconComponent = iconMap[icon] || User;
+  const IconComponent = iconMap[icon] || CheckSquare;
   const isExpanded = expandedWidget === id;
 
   return (

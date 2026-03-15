@@ -1,36 +1,74 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# WidgetDeck
+
+A futuristic, draggable productivity dashboard built with Next.js. Think Notion meets a developer control panel — manage tasks, notes, habits, and more through customizable, resizable widgets on a grid.
+
+## Features
+
+- **Draggable & Resizable Widgets** — Arrange your workspace however you want
+- **Layout Persistence** — Widget positions and sizes save to localStorage automatically
+- **Command Palette** — `Ctrl+K` / `⌘K` to quickly navigate and run actions
+- **Widget Toggle** — Enable/disable widgets from the toolbar
+- **Dark Mode First** — Sleek, futuristic design inspired by Linear and Vercel
+
+## Widgets
+
+| Widget | Description |
+|--------|-------------|
+| **Tasks** | Todo list with priorities (low/medium/high), checkboxes, and delete |
+| **Notes** | Multi-note scratchpad with sidebar navigation and auto-save |
+| **Calendar** | Month view with event creation, navigation, and event dots |
+| **Lists** | Create custom named lists with checkable items |
+| **Pomodoro** | 25/5 min focus timer with circular progress and session tracking |
+| **Habits** | Daily habit tracker with 7-day grid and streak counter |
+| **Bookmarks** | Save and organize links with favicon previews |
+
+## Tech Stack
+
+- **Framework:** Next.js (App Router)
+- **Language:** TypeScript
+- **Styling:** Tailwind CSS v4
+- **Animations:** Framer Motion
+- **Grid System:** react-grid-layout
+- **State:** Zustand (with localStorage persistence)
+- **Icons:** Lucide React
 
 ## Getting Started
 
-First, run the development server:
-
 ```bash
+# Install dependencies
+npm install
+
+# Start development server
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Project Structure
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```
+src/
+├── app/                    # Next.js app router
+│   ├── globals.css         # Theme tokens + grid layout styles
+│   ├── layout.tsx          # Root layout with fonts
+│   └── page.tsx            # Dashboard page
+├── components/
+│   ├── layout/             # Dashboard shell
+│   │   ├── DashboardGrid   # Responsive grid with react-grid-layout
+│   │   ├── WidgetContainer # Card chrome, drag handle, expand button
+│   │   ├── ExpandedWidget  # Fullscreen modal overlay
+│   │   ├── Toolbar         # Top bar with controls
+│   │   └── GridBackground  # SVG grid pattern
+│   ├── widgets/            # All 7 productivity widgets
+│   └── CommandPalette.tsx  # Ctrl+K command palette
+├── config/widgets.ts       # Widget definitions + default layouts
+├── hooks/                  # Custom hooks
+├── store/
+│   ├── dashboardStore.ts   # Layout & UI state
+│   └── contentStore.ts     # All user data (tasks, notes, etc.)
+└── types/widget.ts         # TypeScript types
+```
 
-## Learn More
+## License
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Manseur Hicham

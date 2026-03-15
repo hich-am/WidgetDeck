@@ -13,9 +13,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "WidgetDeck — Portfolio Dashboard",
+  title: "WidgetDeck — Your Personal Dashboard",
   description:
-    "A futuristic, interactive portfolio dashboard with draggable, resizable widgets.",
+    "A futuristic, draggable productivity dashboard. Manage tasks, notes, habits, and more in customizable widgets.",
 };
 
 export default function RootLayout({
