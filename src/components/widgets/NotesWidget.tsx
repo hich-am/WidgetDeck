@@ -26,13 +26,16 @@ export default function NotesWidget() {
 
         <div className="flex-1 space-y-0.5 overflow-auto">
           {notes.map((note) => (
-            <button
+            <div
               key={note.id}
+              role="button"
+              tabIndex={0}
               onClick={() => setActiveNote(note.id)}
-              className={`group flex w-full items-center gap-1.5 rounded-lg px-2 py-1.5 text-left text-[11px] transition-colors ${
+              onKeyDown={(e) => e.key === "Enter" && setActiveNote(note.id)}
+              className={`group flex w-full cursor-pointer items-center gap-1.5 rounded-lg px-2 py-1.5 text-left text-[11px] transition-colors ${
                 activeNoteId === note.id
                   ? "bg-accent/10 text-accent"
-                  : "text-text-muted hover:bg-surface hover:text-text-primary"
+                  : "text-text-muted hover:bg-base hover:text-text-primary"
               }`}
             >
               <FileText className="h-3 w-3 shrink-0" />
@@ -46,7 +49,7 @@ export default function NotesWidget() {
               >
                 <Trash2 className="h-2.5 w-2.5" />
               </button>
-            </button>
+            </div>
           ))}
         </div>
       </div>
