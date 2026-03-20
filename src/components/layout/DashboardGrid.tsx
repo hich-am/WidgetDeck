@@ -31,8 +31,8 @@ export default function DashboardGrid() {
           layouts={layouts as ResponsiveLayouts}
           breakpoints={breakpoints}
           cols={cols}
-          rowHeight={100}
-          margin={[20, 20] as const}
+          rowHeight={110}
+          margin={[24, 24] as const}
           containerPadding={[0, 0] as const}
           onLayoutChange={(_currentLayout: any, allLayouts: any) => {
             onLayoutChange(_currentLayout, allLayouts as ResponsiveLayouts);

@@ -4,15 +4,15 @@
   --color-base: var(--color-base, #F7F7F9);
   --color-surface: var(--color-surface, #FFFFFF);
   --color-widget: var(--color-widget, #FFFFFF);
-  --color-border-muted: var(--color-border-muted, #E5E7EB);
-  --color-accent: var(--color-accent, #6366F1);
-  --color-accent-hover: var(--color-accent-hover, #818CF8);
-  --color-cyan: var(--color-cyan, #34D399);
-  --color-amber: var(--color-amber, #F59E0B);
-  --color-coral: var(--color-coral, #FF6B6B);
-  --color-lavender: var(--color-lavender, #A78BFA);
-  --color-text-primary: var(--color-text-primary, #111111);
-  --color-text-muted: var(--color-text-muted, #6B7280);
+  --color-border-muted: var(--color-border-muted, #E8E8ED);
+  --color-accent: var(--color-accent, #5B8DEF);
+  --color-accent-hover: var(--color-accent-hover, #7DA5F3);
+  --color-cyan: var(--color-cyan, #5CB99A);
+  --color-amber: var(--color-amber, #E8956A);
+  --color-coral: var(--color-coral, #E87E7E);
+  --color-lavender: var(--color-lavender, #9B8FC4);
+  --color-text-primary: var(--color-text-primary, #1A1A2E);
+  --color-text-muted: var(--color-text-muted, #8E8EA0);
   --font-sans: var(--font-inter);
   --font-mono: var(--font-geist-mono);
 }
@@ -21,10 +21,12 @@
 * {
   scrollbar-width: thin;
   scrollbar-color: var(--color-border-muted) transparent;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 ::selection {
-  background: color-mix(in srgb, var(--color-accent) 20%, transparent);
+  background: color-mix(in srgb, var(--color-accent) 18%, transparent);
   color: var(--color-text-primary);
 }
 
@@ -38,11 +40,11 @@ body {
 /* ── React Grid Layout styles ── */
 .react-grid-layout {
   position: relative;
-  transition: height 200ms ease;
+  transition: height 300ms ease;
 }
 
 .react-grid-item {
-  transition: all 250ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  transition: all 300ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
   transition-property: left, top, width, height;
 }
 
@@ -60,7 +62,7 @@ body {
   z-index: 100;
   will-change: transform;
   transition: none;
-  box-shadow: 0 24px 48px rgba(0, 0, 0, 0.12) !important;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08) !important;
 }
 
 .react-grid-item > .react-resizable-handle {
@@ -75,8 +77,8 @@ body {
 .react-grid-item > .react-resizable-handle::after {
   content: "";
   position: absolute;
-  right: 6px;
-  bottom: 6px;
+  right: 8px;
+  bottom: 8px;
   width: 6px;
   height: 6px;
   border-right: 2px solid var(--color-border-muted);
@@ -90,9 +92,9 @@ body {
 }
 
 .react-grid-placeholder {
-  background: color-mix(in srgb, var(--color-accent) 8%, transparent) !important;
-  border: 2px dashed color-mix(in srgb, var(--color-accent) 25%, transparent) !important;
-  border-radius: 24px !important;
+  background: color-mix(in srgb, var(--color-accent) 6%, transparent) !important;
+  border: 2px dashed color-mix(in srgb, var(--color-accent) 18%, transparent) !important;
+  border-radius: 28px !important;
   opacity: 1 !important;
 }
 
@@ -112,5 +114,5 @@ body {
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: color-mix(in srgb, var(--color-border-muted) 100%, black 15%);
+  background: color-mix(in srgb, var(--color-border-muted) 100%, black 10%);
 }

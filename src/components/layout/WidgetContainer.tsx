@@ -45,28 +45,28 @@ export default function WidgetContainer({
 
   return (
     <motion.div
-      className="group relative flex h-full w-full flex-col overflow-hidden rounded-3xl border border-border-muted bg-widget"
+      className="group relative flex h-full w-full flex-col overflow-hidden rounded-3xl border border-border-muted/50 bg-widget"
       style={{
-        boxShadow: "0 10px 30px rgba(0,0,0,0.06)",
+        boxShadow: "0 2px 16px rgba(0,0,0,0.04), 0 1px 4px rgba(0,0,0,0.02)",
       }}
       whileHover={
         !isExpanded
           ? {
-              y: -4,
-              scale: 1.02,
-              boxShadow: "0 20px 50px rgba(0,0,0,0.1)",
+              y: -2,
+              scale: 1.01,
+              boxShadow: "0 12px 36px rgba(0,0,0,0.07)",
             }
           : {}
       }
-      transition={{ type: "spring", stiffness: 300, damping: 25 }}
+      transition={{ type: "spring", stiffness: 280, damping: 28 }}
     >
       {/* Header / Drag Handle */}
-      <div className="widget-drag-handle flex h-12 shrink-0 cursor-grab items-center justify-between px-5 active:cursor-grabbing">
-        <div className="flex items-center gap-2.5">
-          <div className="flex h-7 w-7 items-center justify-center rounded-xl bg-accent/8">
-            <IconComponent className="h-3.5 w-3.5 text-accent" />
+      <div className="widget-drag-handle flex h-14 shrink-0 cursor-grab items-center justify-between px-6 active:cursor-grabbing">
+        <div className="flex items-center gap-3">
+          <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-accent/8">
+            <IconComponent className="h-4 w-4 text-accent" />
           </div>
-          <span className="text-sm font-semibold tracking-tight text-text-primary">
+          <span className="text-[15px] font-semibold tracking-tight text-text-primary">
             {title}
           </span>
         </div>
@@ -77,20 +77,20 @@ export default function WidgetContainer({
               e.stopPropagation();
               expandWidget(id);
             }}
-            className="rounded-xl p-1.5 text-text-muted transition-colors hover:bg-base hover:text-accent"
+            className="rounded-xl p-2 text-text-muted transition-colors hover:bg-base hover:text-accent"
             aria-label={isExpanded ? "Minimize" : "Expand"}
           >
             {isExpanded ? (
-              <Minimize2 className="h-3.5 w-3.5" />
+              <Minimize2 className="h-4 w-4" />
             ) : (
-              <Maximize2 className="h-3.5 w-3.5" />
+              <Maximize2 className="h-4 w-4" />
             )}
           </button>
         </div>
       </div>
 
       {/* Content */}
-      <div className="flex-1 overflow-auto px-5 pb-5">{children}</div>
+      <div className="flex-1 overflow-auto px-6 pb-6">{children}</div>
     </motion.div>
   );
 }
