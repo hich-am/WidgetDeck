@@ -29,39 +29,39 @@ export default function BookmarksWidget() {
   };
 
   return (
-    <div className="flex h-full flex-col gap-3">
+    <div className="flex h-full flex-col gap-4">
       {/* Add form */}
-      <div className="flex flex-col gap-1.5">
+      <div className="flex flex-col gap-2">
         <input
           value={title}
           onChange={(e) => setTitle(e.target.value)}
-          placeholder="Title"
-          className="rounded-lg border border-border-muted bg-surface px-2 py-1.5 text-[11px] text-text-primary placeholder-text-muted outline-none focus:border-accent/50"
+          placeholder="Bookmark title"
+          className="rounded-xl border border-border-muted/60 bg-surface px-4 py-2.5 text-sm text-text-primary placeholder-text-muted outline-none focus:border-accent/40 focus:ring-2 focus:ring-accent/10"
         />
-        <div className="flex gap-1">
+        <div className="flex gap-2">
           <input
             value={url}
             onChange={(e) => setUrl(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && handleAdd()}
             placeholder="https://..."
-            className="flex-1 rounded-lg border border-border-muted bg-surface px-2 py-1.5 text-[11px] text-text-primary placeholder-text-muted outline-none focus:border-accent/50"
+            className="flex-1 rounded-xl border border-border-muted/60 bg-surface px-4 py-2.5 text-sm text-text-primary placeholder-text-muted outline-none focus:border-accent/40 focus:ring-2 focus:ring-accent/10"
           />
           <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
+            whileHover={{ scale: 1.03 }}
+            whileTap={{ scale: 0.97 }}
             onClick={handleAdd}
-            className="flex items-center gap-1 rounded-lg bg-accent/10 px-3 text-[11px] text-accent hover:bg-accent/20"
+            className="flex items-center gap-1.5 rounded-xl bg-accent/10 px-4 text-sm font-medium text-accent hover:bg-accent/15"
           >
-            <Plus className="h-3 w-3" />
+            <Plus className="h-3.5 w-3.5" />
             Add
           </motion.button>
         </div>
       </div>
 
       {/* Bookmark list */}
-      <div className="flex-1 space-y-1.5 overflow-auto">
+      <div className="flex-1 space-y-2 overflow-auto">
         {bookmarks.length === 0 && (
-          <div className="flex h-full items-center justify-center text-xs text-text-muted">
+          <div className="flex h-full items-center justify-center text-sm text-text-muted">
             Save your first bookmark
           </div>
         )}
@@ -75,32 +75,32 @@ export default function BookmarksWidget() {
                 initial={{ opacity: 0, y: -6 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, x: -16 }}
-                className="group flex items-center gap-2 rounded-xl bg-base px-3 py-2"
+                className="group flex items-center gap-3 rounded-xl bg-base/60 px-4 py-3"
               >
                 {favicon ? (
-                  <img src={favicon} alt="" className="h-4 w-4 shrink-0 rounded" />
+                  <img src={favicon} alt="" className="h-5 w-5 shrink-0 rounded" />
                 ) : (
-                  <Globe className="h-4 w-4 shrink-0 text-text-muted" />
+                  <Globe className="h-5 w-5 shrink-0 text-text-muted" />
                 )}
                 <div className="min-w-0 flex-1">
-                  <div className="truncate text-xs font-medium text-text-primary">
+                  <div className="truncate text-sm font-medium text-text-primary">
                     {bm.title}
                   </div>
-                  <div className="truncate text-[10px] text-text-muted">{bm.url}</div>
+                  <div className="truncate text-xs text-text-muted">{bm.url}</div>
                 </div>
                 <a
                   href={bm.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="shrink-0 text-text-muted hover:text-accent"
+                  className="shrink-0 text-text-muted transition-colors hover:text-accent"
                 >
-                  <ExternalLink className="h-3 w-3" />
+                  <ExternalLink className="h-3.5 w-3.5" />
                 </a>
                 <button
                   onClick={() => deleteBookmark(bm.id)}
-                  className="shrink-0 text-text-muted opacity-0 hover:text-red-400 group-hover:opacity-100"
+                  className="shrink-0 text-text-muted opacity-0 transition-opacity hover:text-red-400 group-hover:opacity-100"
                 >
-                  <Trash2 className="h-3 w-3" />
+                  <Trash2 className="h-3.5 w-3.5" />
                 </button>
               </motion.div>
             );

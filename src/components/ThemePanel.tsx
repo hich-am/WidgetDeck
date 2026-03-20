@@ -24,31 +24,31 @@ export default function ThemePanel() {
           />
 
           <motion.div
-            className="fixed right-0 top-0 z-50 flex h-full w-80 flex-col border-l border-border-muted bg-surface"
-            style={{ boxShadow: "-16px 0 48px rgba(0,0,0,0.06)" }}
+            className="fixed right-0 top-0 z-50 flex h-full w-[340px] flex-col border-l border-border-muted/50 bg-surface"
+            style={{ boxShadow: "-16px 0 48px rgba(0,0,0,0.04)" }}
             initial={{ x: "100%" }}
             animate={{ x: 0 }}
             exit={{ x: "100%" }}
             transition={{ type: "spring", stiffness: 300, damping: 30 }}
           >
-            <div className="flex h-16 items-center justify-between border-b border-border-muted px-5">
-              <h2 className="text-sm font-bold tracking-tight text-text-primary">
+            <div className="flex h-[72px] items-center justify-between border-b border-border-muted/50 px-6">
+              <h2 className="text-base font-bold tracking-tight text-text-primary">
                 Theme
               </h2>
               <button
                 onClick={closeThemePicker}
-                className="rounded-xl p-1.5 text-text-muted transition-colors hover:bg-base hover:text-text-primary"
+                className="rounded-xl p-2 text-text-muted transition-colors hover:bg-base hover:text-text-primary"
               >
                 <X className="h-4 w-4" />
               </button>
             </div>
 
-            <div className="flex-1 overflow-auto p-4">
+            <div className="flex-1 overflow-auto p-5">
               {/* Light section */}
-              <div className="mb-3 text-[10px] font-semibold uppercase tracking-widest text-text-muted">
+              <div className="mb-3 text-xs font-semibold uppercase tracking-widest text-text-muted">
                 Light
               </div>
-              <div className="grid grid-cols-2 gap-3 mb-6">
+              <div className="grid grid-cols-2 gap-3 mb-8">
                 {lightThemes.map((theme) => (
                   <ThemeCard
                     key={theme.id}
@@ -60,7 +60,7 @@ export default function ThemePanel() {
               </div>
 
               {/* Dark section */}
-              <div className="mb-3 text-[10px] font-semibold uppercase tracking-widest text-text-muted">
+              <div className="mb-3 text-xs font-semibold uppercase tracking-widest text-text-muted">
                 Dark
               </div>
               <div className="grid grid-cols-2 gap-3">
@@ -98,7 +98,7 @@ function ThemeCard({
       className={`relative overflow-hidden rounded-2xl border-2 transition-colors ${
         isActive
           ? "border-accent shadow-sm"
-          : "border-transparent hover:border-border-muted"
+          : "border-transparent hover:border-border-muted/60"
       }`}
     >
       <div
@@ -149,18 +149,18 @@ function ThemeCard({
         </div>
       </div>
       <div
-        className="flex items-center justify-center gap-1.5 px-2 py-2"
+        className="flex items-center justify-center gap-1.5 px-2 py-2.5"
         style={{ backgroundColor: theme.colors.surface }}
       >
         <span
-          className="text-[10px] font-semibold"
+          className="text-[11px] font-semibold"
           style={{ color: theme.colors.textPrimary }}
         >
           {theme.name}
         </span>
         {isActive && (
           <Check
-            className="h-3 w-3"
+            className="h-3.5 w-3.5"
             style={{ color: theme.colors.accent }}
           />
         )}

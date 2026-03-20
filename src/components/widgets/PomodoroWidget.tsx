@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef, useCallback } from "react";
 import { motion } from "framer-motion";
-import { Play, Pause, RotateCcw, Coffee, Zap } from "lucide-react";
+import { Play, Pause, RotateCcw, Coffee, Target } from "lucide-react";
 import { useContentStore } from "@/store/contentStore";
 
 const WORK_SECONDS = 25 * 60;
@@ -61,30 +61,31 @@ export default function PomodoroWidget() {
   };
 
   // SVG circle params
-  const radius = 70;
+  const radius = 72;
   const circumference = 2 * Math.PI * radius;
   const dashOffset = circumference * (1 - progress);
 
   return (
-    <div className="flex h-full flex-col items-center justify-center gap-4">
+    <div className="flex h-full flex-col items-center justify-center gap-5">
       {/* Timer circle */}
       <div className="relative">
-        <svg width="170" height="170" className="-rotate-90">
+        <svg width="176" height="176" className="-rotate-90">
           <circle
-            cx="85"
-            cy="85"
+            cx="88"
+            cy="88"
             r={radius}
             fill="none"
             stroke="var(--color-border-muted)"
-            strokeWidth="6"
+            strokeWidth="5"
+            opacity="0.4"
           />
           <motion.circle
-            cx="85"
-            cy="85"
+            cx="88"
+            cy="88"
             r={radius}
             fill="none"
             stroke={isBreak ? "var(--color-cyan)" : "var(--color-accent)"}
-            strokeWidth="6"
+            strokeWidth="5"
             strokeLinecap="round"
             strokeDasharray={circumference}
             strokeDashoffset={dashOffset}
@@ -92,17 +93,17 @@ export default function PomodoroWidget() {
           />
         </svg>
         <div className="absolute inset-0 flex flex-col items-center justify-center">
-          <div className="flex items-center gap-1">
+          <div className="flex items-center gap-1.5">
             {isBreak ? (
               <Coffee className="h-4 w-4 text-cyan" />
             ) : (
-              <Zap className="h-4 w-4 text-accent" />
+              <Target className="h-4 w-4 text-accent" />
             )}
-            <span className="text-[10px] uppercase tracking-widest text-text-muted">
+            <span className="text-xs font-medium uppercase tracking-wider text-text-muted">
               {isBreak ? "Break" : "Focus"}
             </span>
           </div>
-          <span className="text-3xl font-semibold tabular-nums text-text-primary font-mono">
+          <span className="text-4xl font-semibold tabular-nums text-text-primary">
             {String(minutes).padStart(2, "0")}:{String(seconds).padStart(2, "0")}
           </span>
         </div>
@@ -111,37 +112,44 @@ export default function PomodoroWidget() {
       {/* Controls */}
       <div className="flex items-center gap-3">
         <motion.button
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.9 }}
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
           onClick={() => setIsRunning((r) => !r)}
-          className={`flex h-10 w-10 items-center justify-center rounded-full ${
+          className={`flex items-center gap-2 rounded-2xl px-5 py-2.5 text-sm font-medium transition-colors ${
             isRunning
               ? "bg-amber/10 text-amber"
               : "bg-accent/10 text-accent"
           }`}
         >
           {isRunning ? (
-            <Pause className="h-4 w-4" />
+            <>
+              <Pause className="h-4 w-4" />
+              Pause
+            </>
           ) : (
-            <Play className="h-4 w-4 ml-0.5" />
+            <>
+              <Play className="h-4 w-4" />
+              Start
+            </>
           )}
         </motion.button>
         <motion.button
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.9 }}
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
           onClick={reset}
-          className="flex h-8 w-8 items-center justify-center rounded-full bg-surface text-text-muted hover:text-text-primary"
+          className="flex items-center gap-1.5 rounded-2xl bg-base px-4 py-2.5 text-sm text-text-muted transition-colors hover:text-text-primary"
         >
           <RotateCcw className="h-3.5 w-3.5" />
+          Reset
         </motion.button>
       </div>
 
       {/* Session count */}
-      <div className="flex items-center gap-2 text-[10px] text-text-muted">
-        <span>Sessions: {pomodoroSessions}</span>
+      <div className="flex items-center gap-2 text-xs text-text-muted">
+        <span>Sessions completed: {pomodoroSessions}</span>
         {pomodoroSessions > 0 && (
-          <button onClick={resetPomodoro} className="text-text-muted hover:text-amber underline">
-            reset
+          <button onClick={resetPomodoro} className="text-text-muted underline transition-colors hover:text-accent">
+            clear
           </button>
         )}
       </div>

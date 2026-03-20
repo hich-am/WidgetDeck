@@ -2,7 +2,7 @@
 
 import { useState, useMemo } from "react";
 import { motion } from "framer-motion";
-import { ChevronLeft, ChevronRight, Plus, X, Trash2 } from "lucide-react";
+import { ChevronLeft, ChevronRight, Plus, Trash2 } from "lucide-react";
 import { useContentStore } from "@/store/contentStore";
 
 const DAYS = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"];
@@ -71,29 +71,29 @@ export default function CalendarWidget() {
   const selectedEvents = selectedDate ? eventsByDate[selectedDate] || [] : [];
 
   return (
-    <div className="flex h-full flex-col gap-2">
+    <div className="flex h-full flex-col gap-3">
       {/* Header */}
       <div className="flex items-center justify-between">
-        <button onClick={prev} className="rounded-lg p-1 text-text-muted hover:bg-surface hover:text-text-primary">
+        <button onClick={prev} className="rounded-lg p-1.5 text-text-muted transition-colors hover:bg-base hover:text-text-primary">
           <ChevronLeft className="h-4 w-4" />
         </button>
-        <span className="text-xs font-medium text-text-primary">{monthName}</span>
-        <button onClick={next} className="rounded-lg p-1 text-text-muted hover:bg-surface hover:text-text-primary">
+        <span className="text-sm font-semibold text-text-primary">{monthName}</span>
+        <button onClick={next} className="rounded-lg p-1.5 text-text-muted transition-colors hover:bg-base hover:text-text-primary">
           <ChevronRight className="h-4 w-4" />
         </button>
       </div>
 
       {/* Day headers */}
-      <div className="grid grid-cols-7 gap-0.5">
+      <div className="grid grid-cols-7 gap-1">
         {DAYS.map((d) => (
-          <div key={d} className="text-center text-[10px] font-medium text-text-muted">
+          <div key={d} className="text-center text-[11px] font-medium text-text-muted">
             {d}
           </div>
         ))}
       </div>
 
       {/* Day grid */}
-      <div className="grid grid-cols-7 gap-0.5">
+      <div className="grid grid-cols-7 gap-1">
         {Array.from({ length: firstDay }).map((_, i) => (
           <div key={`e-${i}`} />
         ))}
@@ -108,17 +108,17 @@ export default function CalendarWidget() {
             <button
               key={day}
               onClick={() => setSelectedDate(isSelected ? null : dateStr)}
-              className={`relative flex h-7 items-center justify-center rounded-lg text-[11px] transition-colors ${
+              className={`relative flex h-8 items-center justify-center rounded-xl text-xs transition-all ${
                 isSelected
-                  ? "bg-accent text-white"
+                  ? "bg-accent text-white font-medium shadow-sm"
                   : isToday
-                    ? "bg-accent/15 text-accent font-semibold"
-                    : "text-text-primary hover:bg-surface"
+                    ? "bg-accent/10 text-accent font-medium"
+                    : "text-text-primary hover:bg-base"
               }`}
             >
               {day}
               {hasEvents && !isSelected && (
-                <div className="absolute bottom-0.5 left-1/2 h-1 w-1 -translate-x-1/2 rounded-full bg-cyan" />
+                <div className="absolute bottom-1 left-1/2 h-1 w-1 -translate-x-1/2 rounded-full bg-accent/50" />
               )}
             </button>
           );
@@ -127,36 +127,37 @@ export default function CalendarWidget() {
 
       {/* Selected date events */}
       {selectedDate && (
-        <div className="mt-auto space-y-1.5 border-t border-border-muted pt-2">
-          <div className="text-[10px] font-medium text-text-muted">{selectedDate}</div>
+        <div className="mt-auto space-y-2 border-t border-border-muted/40 pt-3">
+          <div className="text-xs font-medium text-text-muted">{selectedDate}</div>
           {selectedEvents.map((ev) => (
             <div
               key={ev.id}
-              className="group flex items-center gap-2 rounded-lg bg-surface px-2 py-1"
+              className="group flex items-center gap-2.5 rounded-xl bg-base/60 px-3 py-2"
             >
-              <div className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: ev.color }} />
-              <span className="flex-1 text-[11px] text-text-primary">{ev.title}</span>
+              <div className="h-2 w-2 shrink-0 rounded-full" style={{ backgroundColor: ev.color }} />
+              <span className="flex-1 text-sm text-text-primary">{ev.title}</span>
               <button
                 onClick={() => deleteEvent(ev.id)}
                 className="text-text-muted opacity-0 hover:text-red-400 group-hover:opacity-100"
               >
-                <Trash2 className="h-2.5 w-2.5" />
+                <Trash2 className="h-3 w-3" />
               </button>
             </div>
           ))}
-          <div className="flex gap-1">
+          <div className="flex gap-1.5">
             <input
               value={newTitle}
               onChange={(e) => setNewTitle(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && handleAdd()}
               placeholder="Add event..."
-              className="flex-1 rounded-lg border border-border-muted bg-surface px-2 py-1 text-[11px] text-text-primary placeholder-text-muted outline-none focus:border-accent/50"
+              className="flex-1 rounded-xl border border-border-muted/60 bg-surface px-3 py-2 text-sm text-text-primary placeholder-text-muted outline-none focus:border-accent/40 focus:ring-2 focus:ring-accent/10"
             />
             <button
               onClick={handleAdd}
-              className="rounded-lg bg-accent/10 px-2 text-accent hover:bg-accent/20"
+              className="flex items-center gap-1 rounded-xl bg-accent/10 px-3 text-sm text-accent hover:bg-accent/15"
             >
-              <Plus className="h-3 w-3" />
+              <Plus className="h-3.5 w-3.5" />
+              Add
             </button>
           </div>
         </div>

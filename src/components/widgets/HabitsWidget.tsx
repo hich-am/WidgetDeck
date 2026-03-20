@@ -2,10 +2,10 @@
 
 import { useState, useMemo } from "react";
 import { motion } from "framer-motion";
-import { Plus, Trash2, Flame } from "lucide-react";
+import { Plus, Trash2, Flame, Check } from "lucide-react";
 import { useContentStore } from "@/store/contentStore";
 
-const COLORS = ["#6C63FF", "#22D3EE", "#F59E0B", "#10B981", "#F472B6", "#A78BFA", "#FB923C"];
+const COLORS = ["#5B8DEF", "#5CB99A", "#E8956A", "#9B8FC4", "#E87E7E", "#6BC5D2", "#D4804A"];
 
 function getLast7Days(): string[] {
   const days: string[] = [];
@@ -55,41 +55,42 @@ export default function HabitsWidget() {
   };
 
   return (
-    <div className="flex h-full flex-col gap-3">
+    <div className="flex h-full flex-col gap-4">
       {/* Day headers */}
-      <div className="grid gap-1" style={{ gridTemplateColumns: "1fr repeat(7, 28px) 40px" }}>
+      <div className="grid items-end gap-1.5" style={{ gridTemplateColumns: "1fr repeat(7, 32px) 44px" }}>
         <div />
         {last7.map((d) => (
-          <div key={d} className="text-center text-[9px] font-medium text-text-muted">
+          <div key={d} className="text-center text-[10px] font-medium text-text-muted">
             {getDayLabel(d)}
           </div>
         ))}
-        <div className="text-center text-[9px] font-medium text-text-muted">🔥</div>
+        <div className="text-center text-[10px] font-medium text-text-muted">Streak</div>
       </div>
 
       {/* Habit rows */}
-      <div className="flex-1 space-y-1 overflow-auto">
+      <div className="flex-1 space-y-1.5 overflow-auto">
         {habits.length === 0 && (
-          <div className="flex h-full items-center justify-center text-xs text-text-muted">
+          <div className="flex h-full items-center justify-center text-sm text-text-muted">
             Add a habit to start tracking
           </div>
         )}
         {habits.map((habit) => {
           const streak = getStreak(habit.completedDates);
+          const completedCount = last7.filter((d) => habit.completedDates.includes(d)).length;
           return (
             <div
               key={habit.id}
-              className="group grid items-center gap-1"
-              style={{ gridTemplateColumns: "1fr repeat(7, 28px) 40px" }}
+              className="group grid items-center gap-1.5"
+              style={{ gridTemplateColumns: "1fr repeat(7, 32px) 44px" }}
             >
-              <div className="flex items-center gap-1 min-w-0">
-                <div className="h-2 w-2 shrink-0 rounded-full" style={{ backgroundColor: habit.color }} />
-                <span className="truncate text-[11px] text-text-primary">{habit.name}</span>
+              <div className="flex items-center gap-2 min-w-0">
+                <div className="h-2.5 w-2.5 shrink-0 rounded-full" style={{ backgroundColor: habit.color }} />
+                <span className="truncate text-sm text-text-primary">{habit.name}</span>
                 <button
                   onClick={() => deleteHabit(habit.id)}
                   className="shrink-0 text-text-muted opacity-0 hover:text-red-400 group-hover:opacity-100"
                 >
-                  <Trash2 className="h-2.5 w-2.5" />
+                  <Trash2 className="h-3 w-3" />
                 </button>
               </div>
 
@@ -98,29 +99,30 @@ export default function HabitsWidget() {
                 return (
                   <motion.button
                     key={date}
-                    whileHover={{ scale: 1.2 }}
-                    whileTap={{ scale: 0.85 }}
+                    whileHover={{ scale: 1.15 }}
+                    whileTap={{ scale: 0.9 }}
                     onClick={() => toggleHabitDate(habit.id, date)}
-                    className={`mx-auto flex h-6 w-6 items-center justify-center rounded-md transition-colors ${
+                    className={`mx-auto flex h-7 w-7 items-center justify-center rounded-full transition-all ${
                       done
-                        ? "bg-opacity-100"
-                        : "bg-base hover:bg-border-muted"
+                        ? ""
+                        : "bg-base hover:bg-border-muted/40"
                     }`}
-                    style={done ? { backgroundColor: habit.color + "30" } : {}}
+                    style={done ? { backgroundColor: habit.color + "18" } : {}}
                   >
                     {done && (
-                      <div
-                        className="h-2.5 w-2.5 rounded-sm"
-                        style={{ backgroundColor: habit.color }}
+                      <Check
+                        className="h-3.5 w-3.5"
+                        style={{ color: habit.color }}
+                        strokeWidth={3}
                       />
                     )}
                   </motion.button>
                 );
               })}
 
-              <div className="flex items-center justify-center gap-0.5 text-[10px]">
-                {streak > 0 && <Flame className="h-3 w-3 text-amber" />}
-                <span className="text-text-muted">{streak}</span>
+              <div className="flex items-center justify-center gap-0.5">
+                {streak > 0 && <Flame className="h-3.5 w-3.5 text-amber" />}
+                <span className="text-xs font-medium text-text-muted">{streak}</span>
               </div>
             </div>
           );
@@ -128,19 +130,20 @@ export default function HabitsWidget() {
       </div>
 
       {/* Add habit */}
-      <div className="flex gap-1">
+      <div className="flex gap-2">
         <input
           value={newName}
           onChange={(e) => setNewName(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && handleAdd()}
           placeholder="New habit..."
-          className="flex-1 rounded-lg border border-border-muted bg-surface px-2 py-1 text-[11px] text-text-primary placeholder-text-muted outline-none focus:border-accent/50"
+          className="flex-1 rounded-xl border border-border-muted/60 bg-surface px-3 py-2 text-sm text-text-primary placeholder-text-muted outline-none focus:border-accent/40 focus:ring-2 focus:ring-accent/10"
         />
         <button
           onClick={handleAdd}
-          className="rounded-lg bg-accent/10 px-2 text-accent hover:bg-accent/20"
+          className="flex items-center gap-1.5 rounded-xl bg-accent/10 px-3 text-sm font-medium text-accent hover:bg-accent/15"
         >
-          <Plus className="h-3 w-3" />
+          <Plus className="h-3.5 w-3.5" />
+          Add
         </button>
       </div>
     </div>

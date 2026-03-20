@@ -36,20 +36,20 @@ export default function ListsWidget() {
   };
 
   return (
-    <div className="flex h-full flex-col gap-2">
+    <div className="flex h-full flex-col gap-3">
       {/* List tabs */}
-      <div className="flex flex-wrap gap-1">
+      <div className="flex flex-wrap gap-1.5">
         {lists.map((list) => (
           <button
             key={list.id}
             onClick={() => setActiveList(list.id)}
-            className={`group flex items-center gap-1 rounded-lg px-2 py-1 text-[10px] font-medium transition-colors ${
+            className={`group flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-xs font-medium transition-colors ${
               activeListId === list.id
                 ? "bg-accent/10 text-accent"
-                : "bg-surface text-text-muted hover:text-text-primary"
+                : "bg-base text-text-muted hover:text-text-primary"
             }`}
           >
-            <ListIcon className="h-3 w-3" />
+            <ListIcon className="h-3.5 w-3.5" />
             {list.name}
             <button
               onClick={(e) => {
@@ -65,26 +65,27 @@ export default function ListsWidget() {
       </div>
 
       {/* New list input */}
-      <div className="flex gap-1">
+      <div className="flex gap-2">
         <input
           value={newListName}
           onChange={(e) => setNewListName(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && handleAddList()}
           placeholder="New list name..."
-          className="flex-1 rounded-lg border border-border-muted bg-surface px-2 py-1 text-[11px] text-text-primary placeholder-text-muted outline-none focus:border-accent/50"
+          className="flex-1 rounded-xl border border-border-muted/60 bg-surface px-3 py-2 text-sm text-text-primary placeholder-text-muted outline-none focus:border-accent/40 focus:ring-2 focus:ring-accent/10"
         />
         <button
           onClick={handleAddList}
-          className="rounded-lg bg-accent/10 px-2 text-accent hover:bg-accent/20"
+          className="flex items-center gap-1.5 rounded-xl bg-accent/10 px-3 text-sm font-medium text-accent hover:bg-accent/15"
         >
-          <Plus className="h-3 w-3" />
+          <Plus className="h-3.5 w-3.5" />
+          Add
         </button>
       </div>
 
       {/* List items */}
-      <div className="flex-1 space-y-1 overflow-auto">
+      <div className="flex-1 space-y-1.5 overflow-auto">
         {!activeList && (
-          <div className="flex h-full items-center justify-center text-xs text-text-muted">
+          <div className="flex h-full items-center justify-center text-sm text-text-muted">
             {lists.length === 0 ? "Create a list to get started" : "Select a list"}
           </div>
         )}
@@ -98,17 +99,17 @@ export default function ListsWidget() {
                   initial={{ opacity: 0, y: -6 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, x: -16 }}
-                  className="group flex items-center gap-2 rounded-lg bg-base px-2 py-1.5"
+                  className="group flex items-center gap-3 rounded-xl bg-base/60 px-4 py-2.5"
                 >
                   <button onClick={() => toggleListItem(activeList.id, item.id)} className="shrink-0">
                     {item.done ? (
-                      <CheckCircle2 className="h-3.5 w-3.5 text-accent" />
+                      <CheckCircle2 className="h-4.5 w-4.5 text-accent" />
                     ) : (
-                      <Circle className="h-3.5 w-3.5 text-text-muted" />
+                      <Circle className="h-4.5 w-4.5 text-text-muted/50" />
                     )}
                   </button>
                   <span
-                    className={`flex-1 text-[11px] ${
+                    className={`flex-1 text-sm ${
                       item.done ? "text-text-muted line-through" : "text-text-primary"
                     }`}
                   >
@@ -118,26 +119,27 @@ export default function ListsWidget() {
                     onClick={() => deleteListItem(activeList.id, item.id)}
                     className="text-text-muted opacity-0 hover:text-red-400 group-hover:opacity-100"
                   >
-                    <Trash2 className="h-2.5 w-2.5" />
+                    <Trash2 className="h-3 w-3" />
                   </button>
                 </motion.div>
               ))}
             </AnimatePresence>
 
             {/* Add item */}
-            <div className="flex gap-1 pt-1">
+            <div className="flex gap-2 pt-1">
               <input
                 value={newItemText}
                 onChange={(e) => setNewItemText(e.target.value)}
                 onKeyDown={(e) => e.key === "Enter" && handleAddItem()}
                 placeholder="Add item..."
-                className="flex-1 rounded-lg border border-border-muted bg-surface px-2 py-1 text-[11px] text-text-primary placeholder-text-muted outline-none focus:border-accent/50"
+                className="flex-1 rounded-xl border border-border-muted/60 bg-surface px-3 py-2 text-sm text-text-primary placeholder-text-muted outline-none focus:border-accent/40 focus:ring-2 focus:ring-accent/10"
               />
               <button
                 onClick={handleAddItem}
-                className="rounded-lg bg-accent/10 px-2 text-accent hover:bg-accent/20"
+                className="flex items-center gap-1.5 rounded-xl bg-accent/10 px-3 text-sm font-medium text-accent hover:bg-accent/15"
               >
-                <Plus className="h-3 w-3" />
+                <Plus className="h-3.5 w-3.5" />
+                Add
               </button>
             </div>
           </>
