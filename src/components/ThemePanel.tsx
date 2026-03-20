@@ -8,12 +8,8 @@ export default function ThemePanel() {
   const { activeThemeId, themePickerOpen, setTheme, closeThemePicker } =
     useThemeStore();
 
-  const lightThemes = THEMES.filter((t) =>
-    ["canvas", "warm-sand", "ocean-breeze", "rose-garden", "sage", "lavender-mist", "coral-sunset", "monochrome"].includes(t.id)
-  );
-  const darkThemes = THEMES.filter(
-    (t) => !lightThemes.includes(t)
-  );
+  const lightThemes = THEMES.filter((t) => t.category === "light");
+  const darkThemes = THEMES.filter((t) => t.category === "dark");
 
   return (
     <AnimatePresence>
