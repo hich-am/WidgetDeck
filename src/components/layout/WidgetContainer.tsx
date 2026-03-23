@@ -62,10 +62,8 @@ export default function WidgetContainer({
     >
       {/* Header / Drag Handle */}
       <div className="widget-drag-handle flex h-14 shrink-0 cursor-grab items-center justify-between px-6 active:cursor-grabbing">
-        <div className="flex items-center gap-3">
-          <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-accent/8">
-            <IconComponent className="h-4 w-4 text-accent" />
-          </div>
+        <div className="flex items-center gap-2.5">
+          <IconComponent className="h-4 w-4 text-accent" />
           <span className="text-[15px] font-semibold tracking-tight text-text-primary">
             {title}
           </span>
