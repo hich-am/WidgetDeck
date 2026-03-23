@@ -7,39 +7,23 @@ import ExpandedWidget from "@/components/layout/ExpandedWidget";
 import CommandPalette from "@/components/CommandPalette";
 import ThemeProvider from "@/components/ThemeProvider";
 import ThemePanel from "@/components/ThemePanel";
-import { useDashboardStore } from "@/store/dashboardStore";
-import TodayView from "@/components/today/TodayView";
 
 const DashboardGrid = dynamic(
   () => import("@/components/layout/DashboardGrid"),
   { ssr: false }
 );
 
-function AppContent() {
-  const activeView = useDashboardStore((s) => s.activeView);
-
-  return (
-    <div className="relative min-h-screen bg-base">
-      <GridBackground />
-      <Toolbar />
-      {activeView === "today" ? (
-        <main className="relative z-10 overflow-y-auto">
-          <TodayView />
-        </main>
-      ) : (
-        <DashboardGrid />
-      )}
-      <ExpandedWidget />
-      <CommandPalette />
-      <ThemePanel />
-    </div>
-  );
-}
-
 export default function Home() {
   return (
     <ThemeProvider>
-      <AppContent />
+      <div className="relative min-h-screen bg-base">
+        <GridBackground />
+        <Toolbar />
+        <DashboardGrid />
+        <ExpandedWidget />
+        <CommandPalette />
+        <ThemePanel />
+      </div>
     </ThemeProvider>
   );
 }

@@ -2,18 +2,17 @@
 
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import type { Layout, ResponsiveLayouts } from "react-grid-layout";
+import type { ResponsiveLayouts } from "react-grid-layout";
 import type { WidgetId } from "@/types/widget";
 import { ALL_WIDGET_IDS, getDefaultLayouts } from "@/config/widgets";
-
-export type AppView = "today" | "grid";
 
 interface DashboardStore {
   layouts: ResponsiveLayouts;
   enabledWidgets: WidgetId[];
   expandedWidget: WidgetId | null;
   commandPaletteOpen: boolean;
-  activeView: AppView;
+  focusModeOpen: boolean;
+  dailyReviewOpen: boolean;
 
   setLayouts: (layouts: ResponsiveLayouts) => void;
   toggleWidget: (id: WidgetId) => void;
@@ -22,7 +21,10 @@ interface DashboardStore {
   resetLayout: () => void;
   openCommandPalette: () => void;
   closeCommandPalette: () => void;
-  setView: (view: AppView) => void;
+  openFocusMode: () => void;
+  closeFocusMode: () => void;
+  openDailyReview: () => void;
+  closeDailyReview: () => void;
 }
 
 export const useDashboardStore = create<DashboardStore>()(
@@ -32,7 +34,8 @@ export const useDashboardStore = create<DashboardStore>()(
       enabledWidgets: [...ALL_WIDGET_IDS],
       expandedWidget: null,
       commandPaletteOpen: false,
-      activeView: "today" as AppView,
+      focusModeOpen: false,
+      dailyReviewOpen: false,
 
       setLayouts: (layouts) => set({ layouts }),
 
@@ -54,14 +57,16 @@ export const useDashboardStore = create<DashboardStore>()(
 
       openCommandPalette: () => set({ commandPaletteOpen: true }),
       closeCommandPalette: () => set({ commandPaletteOpen: false }),
-      setView: (view) => set({ activeView: view }),
+      openFocusMode: () => set({ focusModeOpen: true }),
+      closeFocusMode: () => set({ focusModeOpen: false }),
+      openDailyReview: () => set({ dailyReviewOpen: true }),
+      closeDailyReview: () => set({ dailyReviewOpen: false }),
     }),
     {
       name: "widgetdeck-layout",
       partialize: (state) => ({
         layouts: state.layouts,
         enabledWidgets: state.enabledWidgets,
-        activeView: state.activeView,
       }),
     }
   )

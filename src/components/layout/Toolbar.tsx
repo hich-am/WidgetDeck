@@ -8,7 +8,6 @@ import {
   Check,
   ChevronDown,
   Paintbrush,
-  Sun,
   Grid2X2,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -18,14 +17,7 @@ import { DEFAULT_WIDGETS } from "@/config/widgets";
 import type { WidgetId } from "@/types/widget";
 
 export default function Toolbar() {
-  const {
-    resetLayout,
-    openCommandPalette,
-    enabledWidgets,
-    toggleWidget,
-    activeView,
-    setView,
-  } = useDashboardStore();
+  const { resetLayout, openCommandPalette, enabledWidgets, toggleWidget } = useDashboardStore();
   const { openThemePicker } = useThemeStore();
   const [showWidgetMenu, setShowWidgetMenu] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
@@ -50,34 +42,6 @@ export default function Toolbar() {
         <h1 className="text-lg font-bold tracking-tight text-text-primary">
           WidgetDeck
         </h1>
-      </div>
-
-      {/* View toggle — center */}
-      <div className="absolute left-1/2 -translate-x-1/2">
-        <div className="flex items-center gap-1 rounded-2xl bg-base p-1">
-          <button
-            onClick={() => setView("today")}
-            className={`flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-medium transition-all ${
-              activeView === "today"
-                ? "bg-surface text-text-primary shadow-sm"
-                : "text-text-muted hover:text-text-primary"
-            }`}
-          >
-            <Sun className="h-4 w-4" />
-            Today
-          </button>
-          <button
-            onClick={() => setView("grid")}
-            className={`flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-medium transition-all ${
-              activeView === "grid"
-                ? "bg-surface text-text-primary shadow-sm"
-                : "text-text-muted hover:text-text-primary"
-            }`}
-          >
-            <Grid2X2 className="h-4 w-4" />
-            Dashboard
-          </button>
-        </div>
       </div>
 
       {/* Actions */}
