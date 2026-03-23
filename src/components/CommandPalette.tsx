@@ -18,6 +18,7 @@ import {
 import { useDashboardStore } from "@/store/dashboardStore";
 import { useContentStore } from "@/store/contentStore";
 import type { WidgetId } from "@/types/widget";
+import { BarChart2 } from "lucide-react";
 
 interface Command {
   id: string;
@@ -31,13 +32,16 @@ export default function CommandPalette() {
   const {
     commandPaletteOpen,
     closeCommandPalette,
+    openCommandPalette,
     expandWidget,
     resetLayout,
     toggleWidget,
     enabledWidgets,
+    openFocusMode,
+    openDailyReview,
   } = useDashboardStore();
 
-  const { resetAll } = useContentStore();
+  const { resetAll, addNote } = useContentStore();
 
   const [query, setQuery] = useState("");
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -108,15 +112,38 @@ export default function CommandPalette() {
         action: () => resetAll(),
         section: "Actions",
       },
+      {
+        id: "open-analytics",
+        label: "Open Analytics",
+        icon: BarChart2,
+        action: () => expandWidget("analytics"),
+        section: "Navigate",
+      },
+      {
+        id: "focus-mode",
+        label: "Enter Focus Mode",
+        icon: Timer,
+        action: openFocusMode,
+        section: "Actions",
+      },
+      {
+        id: "daily-review",
+        label: "Open Daily Review",
+        icon: CheckSquare,
+        action: openDailyReview,
+        section: "Actions",
+      },
+      {
+        id: "new-note",
+        label: "New Note",
+        icon: FileText,
+        action: () => { addNote(); expandWidget("notes"); },
+        section: "Actions",
+      },
       ...(
         [
-          "tasks",
-          "notes",
-          "calendar",
-          "lists",
-          "pomodoro",
-          "habits",
-          "bookmarks",
+          "tasks", "notes", "calendar", "lists",
+          "pomodoro", "habits", "bookmarks", "analytics",
         ] as WidgetId[]
       ).map((id) => ({
         id: `toggle-${id}`,
@@ -126,7 +153,7 @@ export default function CommandPalette() {
         section: "Widgets",
       })),
     ],
-    [expandWidget, resetLayout, resetAll, toggleWidget, enabledWidgets]
+    [expandWidget, resetLayout, resetAll, toggleWidget, enabledWidgets, openFocusMode, openDailyReview, addNote]
   );
 
   const filtered = useMemo(() => {
@@ -145,19 +172,69 @@ export default function CommandPalette() {
 
   useEffect(() => {
     const handleKey = (e: KeyboardEvent) => {
+      const target = e.target as HTMLElement;
+      const typing = target.tagName === "INPUT" || target.tagName === "TEXTAREA" || target.isContentEditable;
+
+      // ⌘K / Ctrl+K — command palette
       if ((e.metaKey || e.ctrlKey) && e.key === "k") {
         e.preventDefault();
         const store = useDashboardStore.getState();
-        if (store.commandPaletteOpen) {
-          closeCommandPalette();
-        } else {
-          store.openCommandPalette();
-        }
+        store.commandPaletteOpen ? closeCommandPalette() : openCommandPalette();
+        return;
+      }
+
+      // / — command palette (when not typing)
+      if (e.key === "/" && !typing) {
+        e.preventDefault();
+        openCommandPalette();
+        return;
+      }
+
+      if (typing) return; // ignore shortcuts while typing
+
+      // T — expand Tasks widget
+      if (e.key === "t" || e.key === "T") {
+        e.preventDefault();
+        useDashboardStore.getState().expandWidget("tasks");
+        return;
+      }
+
+      // N — new note
+      if (e.key === "n" || e.key === "N") {
+        e.preventDefault();
+        useContentStore.getState().addNote();
+        useDashboardStore.getState().expandWidget("notes");
+        return;
+      }
+
+      // F — focus mode
+      if (e.key === "f" || e.key === "F") {
+        e.preventDefault();
+        const store = useDashboardStore.getState();
+        store.focusModeOpen ? store.closeFocusMode() : store.openFocusMode();
+        return;
+      }
+
+      // R — daily review
+      if (e.key === "r" || e.key === "R") {
+        e.preventDefault();
+        useDashboardStore.getState().openDailyReview();
+        return;
+      }
+
+      // Escape — close everything
+      if (e.key === "Escape") {
+        const store = useDashboardStore.getState();
+        store.closeFocusMode();
+        store.closeDailyReview();
+        store.collapseWidget();
+        closeCommandPalette();
+        return;
       }
     };
     window.addEventListener("keydown", handleKey);
     return () => window.removeEventListener("keydown", handleKey);
-  }, [closeCommandPalette]);
+  }, [closeCommandPalette, openCommandPalette]);
 
   const runCommand = useCallback(
     (cmd: Command) => {

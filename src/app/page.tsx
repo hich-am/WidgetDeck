@@ -7,6 +7,7 @@ import ExpandedWidget from "@/components/layout/ExpandedWidget";
 import CommandPalette from "@/components/CommandPalette";
 import ThemeProvider from "@/components/ThemeProvider";
 import ThemePanel from "@/components/ThemePanel";
+import DailyReview from "@/components/DailyReview";
 
 const DashboardGrid = dynamic(
   () => import("@/components/layout/DashboardGrid"),
@@ -23,6 +24,7 @@ export default function Home() {
         <ExpandedWidget />
         <CommandPalette />
         <ThemePanel />
+        <DailyReview />
       </div>
     </ThemeProvider>
   );
