@@ -8,6 +8,8 @@ import {
   Check,
   ChevronDown,
   Paintbrush,
+  Sun,
+  Grid2X2,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useDashboardStore } from "@/store/dashboardStore";
@@ -21,6 +23,8 @@ export default function Toolbar() {
     openCommandPalette,
     enabledWidgets,
     toggleWidget,
+    activeView,
+    setView,
   } = useDashboardStore();
   const { openThemePicker } = useThemeStore();
   const [showWidgetMenu, setShowWidgetMenu] = useState(false);
@@ -43,10 +47,36 @@ export default function Toolbar() {
         <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-accent/8">
           <LayoutGrid className="h-5 w-5 text-accent" />
         </div>
-        <div>
-          <h1 className="text-lg font-bold tracking-tight text-text-primary">
-            WidgetDeck
-          </h1>
+        <h1 className="text-lg font-bold tracking-tight text-text-primary">
+          WidgetDeck
+        </h1>
+      </div>
+
+      {/* View toggle — center */}
+      <div className="absolute left-1/2 -translate-x-1/2">
+        <div className="flex items-center gap-1 rounded-2xl bg-base p-1">
+          <button
+            onClick={() => setView("today")}
+            className={`flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-medium transition-all ${
+              activeView === "today"
+                ? "bg-surface text-text-primary shadow-sm"
+                : "text-text-muted hover:text-text-primary"
+            }`}
+          >
+            <Sun className="h-4 w-4" />
+            Today
+          </button>
+          <button
+            onClick={() => setView("grid")}
+            className={`flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-medium transition-all ${
+              activeView === "grid"
+                ? "bg-surface text-text-primary shadow-sm"
+                : "text-text-muted hover:text-text-primary"
+            }`}
+          >
+            <Grid2X2 className="h-4 w-4" />
+            Dashboard
+          </button>
         </div>
       </div>
 
@@ -70,7 +100,7 @@ export default function Toolbar() {
             onClick={() => setShowWidgetMenu((prev) => !prev)}
             className="flex items-center gap-2 rounded-2xl px-4 py-2.5 text-sm font-medium text-text-muted transition-colors hover:bg-base hover:text-text-primary"
           >
-            <LayoutGrid className="h-4 w-4" />
+            <Grid2X2 className="h-4 w-4" />
             Widgets
             <ChevronDown className="h-3.5 w-3.5" />
           </button>
@@ -97,9 +127,7 @@ export default function Toolbar() {
                       className="flex w-full items-center justify-between px-4 py-3 text-sm text-text-primary transition-colors hover:bg-base"
                     >
                       <span>{w.title}</span>
-                      {isEnabled && (
-                        <Check className="h-4 w-4 text-accent" />
-                      )}
+                      {isEnabled && <Check className="h-4 w-4 text-accent" />}
                     </button>
                   );
                 })}
@@ -117,7 +145,7 @@ export default function Toolbar() {
           Theme
         </button>
 
-        {/* Reset Layout */}
+        {/* Reset */}
         <button
           onClick={resetLayout}
           className="flex items-center gap-2 rounded-2xl px-4 py-2.5 text-sm font-medium text-text-muted transition-colors hover:bg-base hover:text-coral"

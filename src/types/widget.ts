@@ -29,7 +29,10 @@ export interface Task {
   title: string;
   done: boolean;
   priority: "low" | "medium" | "high";
-  dueDate?: string;
+  dueDate?: string;     // YYYY-MM-DD
+  createdAt: string;    // ISO string
+  completedAt?: string; // ISO string
+  linkedNoteId?: string;
 }
 
 export interface Note {
@@ -37,6 +40,9 @@ export interface Note {
   title: string;
   content: string;
   updatedAt: string;
+  tags: string[];       // e.g. ["work", "ideas"]
+  isJournal?: boolean;  // auto-created daily journal
+  linkedTaskIds?: string[];
 }
 
 export interface CalEvent {
@@ -44,6 +50,7 @@ export interface CalEvent {
   title: string;
   date: string; // YYYY-MM-DD
   color: string;
+  taskId?: string; // linked task
 }
 
 export interface UserList {
@@ -70,4 +77,11 @@ export interface Bookmark {
   title: string;
   url: string;
   createdAt: string;
+}
+
+export interface FocusSession {
+  date: string;       // YYYY-MM-DD
+  taskId?: string;
+  taskTitle?: string;
+  minutes: number;
 }

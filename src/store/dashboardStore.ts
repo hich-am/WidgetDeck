@@ -6,11 +6,14 @@ import type { Layout, ResponsiveLayouts } from "react-grid-layout";
 import type { WidgetId } from "@/types/widget";
 import { ALL_WIDGET_IDS, getDefaultLayouts } from "@/config/widgets";
 
+export type AppView = "today" | "grid";
+
 interface DashboardStore {
   layouts: ResponsiveLayouts;
   enabledWidgets: WidgetId[];
   expandedWidget: WidgetId | null;
   commandPaletteOpen: boolean;
+  activeView: AppView;
 
   setLayouts: (layouts: ResponsiveLayouts) => void;
   toggleWidget: (id: WidgetId) => void;
@@ -19,6 +22,7 @@ interface DashboardStore {
   resetLayout: () => void;
   openCommandPalette: () => void;
   closeCommandPalette: () => void;
+  setView: (view: AppView) => void;
 }
 
 export const useDashboardStore = create<DashboardStore>()(
@@ -28,6 +32,7 @@ export const useDashboardStore = create<DashboardStore>()(
       enabledWidgets: [...ALL_WIDGET_IDS],
       expandedWidget: null,
       commandPaletteOpen: false,
+      activeView: "today" as AppView,
 
       setLayouts: (layouts) => set({ layouts }),
 
@@ -49,12 +54,14 @@ export const useDashboardStore = create<DashboardStore>()(
 
       openCommandPalette: () => set({ commandPaletteOpen: true }),
       closeCommandPalette: () => set({ commandPaletteOpen: false }),
+      setView: (view) => set({ activeView: view }),
     }),
     {
       name: "widgetdeck-layout",
       partialize: (state) => ({
         layouts: state.layouts,
         enabledWidgets: state.enabledWidgets,
+        activeView: state.activeView,
       }),
     }
   )
