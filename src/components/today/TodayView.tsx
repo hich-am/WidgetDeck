@@ -78,7 +78,7 @@ export default function TodayView() {
     carryOverTasks,
     activeTaskId, setActiveTask,
   } = useContentStore();
-  const { setView, expandWidget } = useDashboardStore();
+  const { expandWidget } = useDashboardStore();
   const pomodoro = usePomodoroTimer();
   const todayStr = today();
 
@@ -333,15 +333,7 @@ export default function TodayView() {
         </button>
       </section>
 
-      {/* ── Switch to grid view ── */}
-      <div className="flex justify-center pt-2">
-        <button
-          onClick={() => setView("grid")}
-          className="text-xs text-text-muted hover:text-text-primary transition-colors underline underline-offset-2"
-        >
-          Open full dashboard view →
-        </button>
-      </div>
+
     </div>
   );
 }
