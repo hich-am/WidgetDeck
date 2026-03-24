@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "WidgetDeck — Your Personal Dashboard",
+  title: "monolith — Your Personal Dashboard",
   description:
     "A futuristic, draggable productivity dashboard. Manage tasks, notes, habits, and more in customizable widgets.",
 };

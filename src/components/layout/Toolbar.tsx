@@ -44,10 +44,12 @@ export default function Toolbar() {
     <header className="relative z-30 flex h-[72px] items-center justify-between border-b border-border-muted/60 bg-surface/80 px-8 backdrop-blur-xl">
       {/* Logo */}
       <div className="flex items-center gap-3">
-        <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-accent/8">
-          <LayoutGrid className="h-5 w-5 text-accent" />
+        <div className="flex items-center justify-center">
+          <img src="/logo.png" alt="monolith icon" className="h-9 w-9 object-contain" />
         </div>
-        <h1 className="text-lg font-bold tracking-tight text-text-primary">WidgetDeck</h1>
+        <div className="flex items-center">
+          <img src="/logotype.png" alt="monolith" className="h-6 w-auto object-contain dark:invert" />
+        </div>
       </div>
 
       {/* Actions */}

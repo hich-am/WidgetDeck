@@ -43,11 +43,13 @@ export default function Sidebar() {
     >
       {/* Logo */}
       <div className="flex h-[72px] items-center gap-3 border-b border-border-muted/40 px-4">
-        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-accent/10">
-          <LayoutGrid className="h-5 w-5 text-accent" />
+        <div className="flex shrink-0 items-center justify-center">
+          <img src="/logo.png" alt="monolith icon" className="h-8 w-8 object-contain" />
         </div>
         {!collapsed && (
-          <span className="text-base font-bold tracking-tight text-text-primary">WidgetDeck</span>
+          <div className="flex flex-1 items-center">
+            <img src="/logotype.png" alt="monolith" className="h-5 w-auto object-contain dark:invert" />
+          </div>
         )}
       </div>
 
