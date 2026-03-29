@@ -98,6 +98,18 @@ export const DEFAULT_WIDGETS: WidgetConfig[] = [
       sm: { i: "analytics", x: 0, y: 30, w: 6, h: 4 },
     },
   },
+  {
+    id: "goals",
+    title: "Goals",
+    icon: "Target",
+    minW: 3,
+    minH: 4,
+    defaultLayout: {
+      lg: { i: "goals", x: 8, y: 9, w: 4, h: 5 },
+      md: { i: "goals", x: 0, y: 20, w: 10, h: 5 },
+      sm: { i: "goals", x: 0, y: 34, w: 6, h: 5 },
+    },
+  },
 ];
 
 export const ALL_WIDGET_IDS: WidgetId[] = DEFAULT_WIDGETS.map((w) => w.id);

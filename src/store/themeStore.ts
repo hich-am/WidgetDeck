@@ -471,9 +471,15 @@ export const THEMES: Theme[] = [
 interface ThemeStore {
   activeThemeId: string;
   themePickerOpen: boolean;
+  uiMode: "minimal" | "advanced";
+  ambientSound: string | null;
+  ambientVolume: number;
   setTheme: (id: string) => void;
   openThemePicker: () => void;
   closeThemePicker: () => void;
+  setUiMode: (mode: "minimal" | "advanced") => void;
+  setAmbientSound: (sound: string | null) => void;
+  setAmbientVolume: (volume: number) => void;
 }
 
 export const useThemeStore = create<ThemeStore>()(
@@ -481,13 +487,24 @@ export const useThemeStore = create<ThemeStore>()(
     (set) => ({
       activeThemeId: "canvas",
       themePickerOpen: false,
+      uiMode: "advanced",
+      ambientSound: null,
+      ambientVolume: 0.5,
       setTheme: (id) => set({ activeThemeId: id }),
       openThemePicker: () => set({ themePickerOpen: true }),
       closeThemePicker: () => set({ themePickerOpen: false }),
+      setUiMode: (mode) => set({ uiMode: mode }),
+      setAmbientSound: (sound) => set({ ambientSound: sound }),
+      setAmbientVolume: (volume) => set({ ambientVolume: volume }),
     }),
     {
       name: "widgetdeck-theme",
-      partialize: (state) => ({ activeThemeId: state.activeThemeId }),
+      partialize: (state) => ({
+        activeThemeId: state.activeThemeId,
+        uiMode: state.uiMode,
+        ambientSound: state.ambientSound,
+        ambientVolume: state.ambientVolume,
+      }),
     }
   )
 );

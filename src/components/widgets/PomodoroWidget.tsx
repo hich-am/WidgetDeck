@@ -2,35 +2,60 @@
 
 import { useState, useEffect, useRef, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Play, Pause, RotateCcw, Coffee, Target, ChevronDown, Maximize2 } from "lucide-react";
+import { Play, Pause, RotateCcw, Coffee, Target, ChevronDown, Maximize2, Zap } from "lucide-react";
 import { useContentStore, getTodayFocusMinutes } from "@/store/contentStore";
 import { useDashboardStore } from "@/store/dashboardStore";
+import { FOCUS_MODE_PRESETS } from "@/types/widget";
+import type { FocusModeConfig } from "@/types/widget";
 import dynamic from "next/dynamic";
 
 const FocusMode = dynamic(() => import("@/components/FocusMode"), { ssr: false });
 
-const WORK_SECONDS = 25 * 60;
-const BREAK_SECONDS = 5 * 60;
+const FOCUS_MODES: FocusModeConfig[] = [
+  FOCUS_MODE_PRESETS.light,
+  FOCUS_MODE_PRESETS.deep,
+  {
+    name: "custom",
+    label: "Custom",
+    workMinutes: 45,
+    breakMinutes: 10,
+    longBreakMinutes: 20,
+    sessionsBeforeLongBreak: 3,
+  },
+];
 
 export default function PomodoroWidget() {
   const {
     pomodoroSessions, incrementPomodoro, resetPomodoro,
     activeTaskId, setActiveTask, autoStartPomodoro, toggleAutoStart,
     focusLog, tasks,
+    activeFocusMode, setFocusMode,
+    currentSessionId,
   } = useContentStore();
-  const { openFocusMode, focusModeOpen, closeFocusMode } = useDashboardStore();
+  const { openFocusMode, closeFocusMode } = useDashboardStore();
 
-  const [secondsLeft, setSecondsLeft] = useState(WORK_SECONDS);
+  const [secondsLeft, setSecondsLeft] = useState(activeFocusMode.workMinutes * 60);
   const [isRunning, setIsRunning] = useState(false);
   const [isBreak, setIsBreak] = useState(false);
+  const [sessionDistractions, setSessionDistractions] = useState(0);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
-  const totalSeconds = isBreak ? BREAK_SECONDS : WORK_SECONDS;
+  const workSeconds = activeFocusMode.workMinutes * 60;
+  const breakSeconds = activeFocusMode.breakMinutes * 60;
+  const totalSeconds = isBreak ? breakSeconds : workSeconds;
   const progress = 1 - secondsLeft / totalSeconds;
   const pendingTasks = tasks.filter((t) => !t.done);
   const activeTask = tasks.find((t) => t.id === activeTaskId);
   const todayFocus = getTodayFocusMinutes(focusLog);
   const todayFocusStr = todayFocus >= 60 ? `${Math.floor(todayFocus / 60)}h ${todayFocus % 60}m` : `${todayFocus}m`;
+
+  // Reset timer when focus mode changes
+  const handleModeSelect = (mode: FocusModeConfig) => {
+    setFocusMode(mode);
+    setIsRunning(false);
+    setIsBreak(false);
+    setSecondsLeft(mode.workMinutes * 60);
+  };
 
   const clearTimer = useCallback(() => {
     if (intervalRef.current) { clearInterval(intervalRef.current); intervalRef.current = null; }
@@ -46,28 +71,52 @@ export default function PomodoroWidget() {
             incrementPomodoro(activeTaskId ?? undefined, activeTask?.title);
             setIsBreak(true);
             if (autoStartPomodoro) setIsRunning(true);
-            return BREAK_SECONDS;
+            return breakSeconds;
           } else {
             setIsBreak(false);
             if (autoStartPomodoro) setIsRunning(true);
-            return WORK_SECONDS;
+            return workSeconds;
           }
         }
         return p - 1;
       });
     }, 1000);
     return clearTimer;
-  }, [isRunning, isBreak, incrementPomodoro, activeTaskId, activeTask, autoStartPomodoro, clearTimer]);
+  }, [isRunning, isBreak, incrementPomodoro, activeTaskId, activeTask, autoStartPomodoro, clearTimer, breakSeconds, workSeconds]);
 
   const minutes = Math.floor(secondsLeft / 60);
   const seconds = secondsLeft % 60;
   const radius = 72;
   const circumference = 2 * Math.PI * radius;
   const dashOffset = circumference * (1 - progress);
-  const reset = () => { setIsRunning(false); setIsBreak(false); setSecondsLeft(WORK_SECONDS); };
+
+  const reset = () => {
+    setIsRunning(false);
+    setIsBreak(false);
+    setSecondsLeft(workSeconds);
+    setSessionDistractions(0);
+  };
 
   return (
-    <div className="flex h-full flex-col items-center gap-4">
+    <div className="flex h-full flex-col items-center gap-3">
+      {/* Focus mode tabs */}
+      <div className="flex gap-1 rounded-xl bg-base p-0.5 w-full">
+        {FOCUS_MODES.map((mode) => (
+          <button
+            key={mode.name}
+            onClick={() => handleModeSelect(mode)}
+            className={`flex-1 rounded-lg px-2 py-1.5 text-xs font-medium transition-all ${
+              activeFocusMode.name === mode.name
+                ? "bg-surface text-text-primary shadow-sm"
+                : "text-text-muted hover:text-text-primary"
+            }`}
+          >
+            {mode.label}
+            <span className="block text-[9px] opacity-60">{mode.workMinutes}m</span>
+          </button>
+        ))}
+      </div>
+
       {/* Task selector */}
       <div className="w-full">
         <label className="mb-1.5 block text-xs font-medium text-text-muted">Working on</label>
@@ -105,6 +154,12 @@ export default function PomodoroWidget() {
           <span className="text-4xl font-semibold tabular-nums text-text-primary">
             {String(minutes).padStart(2, "0")}:{String(seconds).padStart(2, "0")}
           </span>
+          {/* Distraction counter under time */}
+          {sessionDistractions > 0 && (
+            <span className="text-[10px] text-text-muted mt-0.5">
+              {sessionDistractions} distraction{sessionDistractions !== 1 ? "s" : ""}
+            </span>
+          )}
         </div>
       </div>
 
@@ -146,6 +201,7 @@ export default function PomodoroWidget() {
         progress={progress}
         onToggle={() => setIsRunning((r) => !r)}
         onReset={reset}
+        onDistraction={() => setSessionDistractions((n) => n + 1)}
       />
     </div>
   );

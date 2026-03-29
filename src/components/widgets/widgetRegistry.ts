@@ -11,6 +11,7 @@ const PomodoroWidget = dynamic(() => import("./PomodoroWidget"), { ssr: false })
 const HabitsWidget = dynamic(() => import("./HabitsWidget"), { ssr: false });
 const BookmarksWidget = dynamic(() => import("./BookmarksWidget"), { ssr: false });
 const AnalyticsWidget = dynamic(() => import("./AnalyticsWidget"), { ssr: false });
+const GoalsWidget = dynamic(() => import("./GoalsWidget"), { ssr: false });
 
 export const widgetComponents: Record<WidgetId, React.ComponentType> = {
   tasks: TasksWidget,
@@ -21,4 +22,6 @@ export const widgetComponents: Record<WidgetId, React.ComponentType> = {
   habits: HabitsWidget,
   bookmarks: BookmarksWidget,
   analytics: AnalyticsWidget,
+  goals: GoalsWidget,
 };
+

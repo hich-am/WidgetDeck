@@ -1,11 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Plus, Trash2, Circle, CheckCircle2, CalendarDays, Zap, Brain, Battery } from "lucide-react";
 import { useContentStore } from "@/store/contentStore";
 import { useWhatNext } from "@/hooks/useWhatNext";
-import type { Task } from "@/types/widget";
+import type { Task, EnergyLevel } from "@/types/widget";
 
 const priorityConfig: Record<Task["priority"], { label: string; bg: string; text: string }> = {
   low:    { label: "Low",  bg: "rgba(142,142,160,0.1)",  text: "#8E8EA0" },
@@ -38,6 +38,34 @@ function formatDue(dueDate?: string): { text: string; overdue: boolean } | null 
   return { text: d.toLocaleDateString("en", { month: "short", day: "numeric" }), overdue: false };
 }
 
+type AgingState = "fresh" | "aging" | "neglected";
+const AGE_WARN_DAYS = 7;
+const AGE_CRITICAL_DAYS = 14;
+
+function taskAgingState(task: Task): AgingState {
+  if (task.done) return "fresh";
+  const created = new Date(task.createdAt);
+  const diffDays = Math.floor((Date.now() - created.getTime()) / 86400000);
+  if (diffDays >= AGE_CRITICAL_DAYS) return "neglected";
+  if (diffDays >= AGE_WARN_DAYS) return "aging";
+  return "fresh";
+}
+
+const agingStyles: Record<AgingState, string> = {
+  fresh:     "",
+  aging:     "border-l-2 border-amber",
+  neglected: "border-l-2 border-red-400",
+};
+
+type EnergyFilter = "all" | EnergyLevel;
+
+const ENERGY_FILTERS: { key: EnergyFilter; label: string }[] = [
+  { key: "all",    label: "All" },
+  { key: "low",    label: "😌 Easy" },
+  { key: "medium", label: "⚡ Normal" },
+  { key: "deep",   label: "🧠 Deep" },
+];
+
 export default function TasksWidget() {
   const { tasks, addTask, toggleTask, deleteTask } = useContentStore();
   const suggestions = useWhatNext(1);
@@ -48,6 +76,7 @@ export default function TasksWidget() {
   const [duration, setDuration] = useState<number | undefined>(undefined);
   const [showMeta, setShowMeta] = useState(false);
   const [showWhatNext, setShowWhatNext] = useState(false);
+  const [energyFilter, setEnergyFilter] = useState<EnergyFilter>("all");
 
   const handleAdd = () => {
     const trimmed = input.trim();
@@ -61,14 +90,19 @@ export default function TasksWidget() {
     setShowMeta(false);
   };
 
-  const sorted = [...tasks].sort((a, b) => {
-    if (a.done !== b.done) return a.done ? 1 : -1;
-    const p: Record<string, number> = { high: 0, medium: 1, low: 2 };
-    return p[a.priority] - p[b.priority];
-  });
+  const sorted = useMemo(() => {
+    const filtered = energyFilter === "all"
+      ? tasks
+      : tasks.filter((t) => t.energyLevel === energyFilter);
+    return [...filtered].sort((a, b) => {
+      if (a.done !== b.done) return a.done ? 1 : -1;
+      const p: Record<string, number> = { high: 0, medium: 1, low: 2 };
+      return p[a.priority] - p[b.priority];
+    });
+  }, [tasks, energyFilter]);
+
   const pending = sorted.filter((t) => !t.done);
   const done = sorted.filter((t) => t.done);
-
   const suggestion = suggestions[0];
 
   return (
@@ -99,6 +133,23 @@ export default function TasksWidget() {
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* Energy filter chips */}
+      <div className="flex gap-1.5 flex-wrap">
+        {ENERGY_FILTERS.map(({ key, label }) => (
+          <button
+            key={key}
+            onClick={() => setEnergyFilter(key)}
+            className={`rounded-full px-2.5 py-1 text-[10px] font-medium transition-all ${
+              energyFilter === key
+                ? "bg-accent text-white"
+                : "bg-base text-text-muted hover:bg-accent/10 hover:text-accent"
+            }`}
+          >
+            {label}
+          </button>
+        ))}
+      </div>
 
       {/* Add input */}
       <div className="flex flex-col gap-2">
@@ -188,11 +239,19 @@ function TaskRow({ task, onToggle, onDelete }: { task: Task; onToggle: (id: stri
   const due = formatDue(task.dueDate);
   const energy = task.energyLevel ? energyConfig[task.energyLevel] : null;
   const EnergyIcon = energy?.icon;
+  const aging = taskAgingState(task);
 
   return (
     <motion.div layout initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, x: -20 }}
-      className="group flex items-center gap-3 rounded-xl bg-base/60 px-4 py-3"
+      className={`group flex items-center gap-3 rounded-xl bg-base/60 px-4 py-3 transition-all ${agingStyles[aging]}`}
     >
+      {/* Neglected pulse dot */}
+      {aging === "neglected" && !task.done && (
+        <span className="absolute -left-0.5 flex h-2 w-2">
+          <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-400 opacity-75" />
+          <span className="relative inline-flex h-2 w-2 rounded-full bg-red-400" />
+        </span>
+      )}
       <button onClick={() => onToggle(task.id)} className="shrink-0 transition-transform active:scale-90">
         {task.done ? <CheckCircle2 className="h-5 w-5 text-accent" /> : <Circle className="h-5 w-5 text-text-muted/40" />}
       </button>
@@ -207,6 +266,12 @@ function TaskRow({ task, onToggle, onDelete }: { task: Task; onToggle: (id: stri
           )}
           {EnergyIcon && !task.done && (
             <EnergyIcon className="h-3 w-3 shrink-0" style={{ color: energy!.color }} />
+          )}
+          {aging === "aging" && !task.done && (
+            <span className="text-[10px] text-amber font-medium">Aging</span>
+          )}
+          {aging === "neglected" && !task.done && (
+            <span className="text-[10px] text-red-400 font-medium">Neglected</span>
           )}
         </div>
       </div>

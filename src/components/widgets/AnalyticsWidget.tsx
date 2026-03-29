@@ -2,9 +2,9 @@
 
 import { useMemo } from "react";
 import { motion } from "framer-motion";
-import { CheckCircle2, Timer, Flame, Zap } from "lucide-react";
-import { useContentStore, getTodayFocusMinutes, computeForgivingStreak } from "@/store/contentStore";
-import { todayStr } from "@/store/contentStore";
+import { CheckCircle2, Timer, Flame, Zap, TrendingUp } from "lucide-react";
+import { useContentStore, getTodayFocusMinutes, computeForgivingStreak, todayStr } from "@/store/contentStore";
+import { useFocusScore } from "@/hooks/useFocusScore";
 
 function getLast7Days(): string[] {
   return Array.from({ length: 7 }, (_, i) => {
@@ -21,25 +21,29 @@ function getWeekRange(): { start: string; end: string } {
   start.setDate(now.getDate() - day);
   const end = new Date(start);
   end.setDate(start.getDate() + 6);
-  return {
-    start: start.toISOString().split("T")[0],
-    end: end.toISOString().split("T")[0],
-  };
+  return { start: start.toISOString().split("T")[0], end: end.toISOString().split("T")[0] };
 }
 
+const MOOD_EMOJIS: Record<number, string> = { 1: "😔", 2: "😕", 3: "😐", 4: "🙂", 5: "😄" };
+
+const burnoutConfig = {
+  low:    { label: "Balanced",  bg: "bg-cyan/10",   text: "text-cyan",    dot: "bg-cyan"   },
+  medium: { label: "Watch out", bg: "bg-amber/10",  text: "text-amber",   dot: "bg-amber"  },
+  high:   { label: "Burnout risk", bg: "bg-red-400/10", text: "text-red-400", dot: "bg-red-400" },
+};
+
 export default function AnalyticsWidget() {
-  const { tasks, focusLog, habits, pomodoroSessions, xp, dailyStreak } = useContentStore();
+  const { tasks, focusLog, habits, pomodoroSessions, xp, dailyStreak, moodLog } = useContentStore();
   const last7 = useMemo(getLast7Days, []);
   const { start, end } = useMemo(getWeekRange, []);
+  const { score, burnout } = useFocusScore();
 
-  // Tasks completed per day (last 7)
   const tasksByDay = useMemo(() =>
     last7.map((date) =>
       tasks.filter((t) => t.done && t.completedAt?.startsWith(date)).length
     ),
   [tasks, last7]);
 
-  // This week stats
   const weekTasks = tasks.filter(
     (t) => t.done && t.completedAt && t.completedAt >= start && t.completedAt <= end + "T23:59:59"
   ).length;
@@ -62,40 +66,108 @@ export default function AnalyticsWidget() {
   const focusMins = weekFocusMin % 60;
 
   const stats = [
-    { label: "Tasks done",     value: weekTasks,          icon: CheckCircle2, color: "text-accent", bg: "bg-accent/8" },
-    { label: "Focus time",     value: focusHours > 0 ? `${focusHours}h ${focusMins}m` : `${focusMins}m`, icon: Timer, color: "text-cyan", bg: "bg-cyan/8" },
-    { label: "Habit rate",     value: `${habitConsistency}%`,   icon: Flame,       color: "text-amber", bg: "bg-amber/8" },
-    { label: "Total XP",       value: xp,                 icon: Zap,         color: "text-lavender", bg: "bg-lavender/8" },
+    { label: "Tasks done",  value: weekTasks,          icon: CheckCircle2, color: "text-accent",   bg: "bg-accent/8" },
+    { label: "Focus time",  value: focusHours > 0 ? `${focusHours}h ${focusMins}m` : `${focusMins}m`, icon: Timer, color: "text-cyan", bg: "bg-cyan/8" },
+    { label: "Habit rate",  value: `${habitConsistency}%`, icon: Flame, color: "text-amber", bg: "bg-amber/8" },
+    { label: "Total XP",    value: xp,                 icon: Zap,         color: "text-lavender", bg: "bg-lavender/8" },
   ];
 
   const days = ["S", "M", "T", "W", "T", "F", "S"];
+  const bCfg = burnoutConfig[burnout];
+
+  // Mood row: last 7 days
+  const moodRow = useMemo(() =>
+    last7.map((d) => moodLog.find((m) => m.date === d)?.mood ?? null),
+  [moodLog, last7]);
+  const hasMood = moodRow.some((m) => m !== null);
+
+  // Focus score gauge SVG params
+  const gaugeR = 36;
+  const gaugeCirc = 2 * Math.PI * gaugeR;
+  const gaugeFill = (score / 100) * gaugeCirc * 0.75; // 270° arc
+  const scoreColor =
+    score >= 70 ? "var(--color-cyan)"
+    : score >= 40 ? "var(--color-amber)"
+    : "var(--color-accent)";
 
   return (
-    <div className="flex h-full flex-col gap-5">
-      {/* Stat cards */}
-      <div className="grid grid-cols-2 gap-3">
-        {stats.map(({ label, value, icon: Icon, color, bg }) => (
-          <div key={label} className="flex items-center gap-3 rounded-2xl bg-base/60 p-3">
-            <div className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-xl ${bg}`}>
-              <Icon className={`h-4 w-4 ${color}`} />
-            </div>
-            <div>
-              <p className="text-base font-bold text-text-primary leading-tight">{value}</p>
-              <p className="text-[11px] text-text-muted">{label}</p>
-            </div>
+    <div className="flex h-full flex-col gap-4">
+      {/* Top row: Focus Score gauge + Burnout badge */}
+      <div className="flex items-center gap-3">
+        {/* Circular gauge */}
+        <div className="relative flex-shrink-0">
+          <svg width="88" height="88" style={{ transform: "rotate(135deg)" }}>
+            <circle
+              cx="44" cy="44" r={gaugeR}
+              fill="none" stroke="var(--color-border-muted)"
+              strokeWidth="6" opacity="0.4"
+              strokeDasharray={`${gaugeCirc * 0.75} ${gaugeCirc * 0.25}`}
+              strokeLinecap="round"
+            />
+            <motion.circle
+              cx="44" cy="44" r={gaugeR}
+              fill="none" stroke={scoreColor}
+              strokeWidth="6" strokeLinecap="round"
+              strokeDasharray={`${gaugeFill} ${gaugeCirc - gaugeFill}`}
+              initial={{ strokeDasharray: `0 ${gaugeCirc}` }}
+              animate={{ strokeDasharray: `${gaugeFill} ${gaugeCirc - gaugeFill}` }}
+              transition={{ duration: 1, ease: "easeOut" }}
+            />
+          </svg>
+          <div className="absolute inset-0 flex flex-col items-center justify-center">
+            <span className="text-xl font-bold leading-none text-text-primary">{score}</span>
+            <span className="text-[9px] text-text-muted uppercase tracking-wide">Focus</span>
           </div>
-        ))}
+        </div>
+
+        {/* Burnout + streak pills */}
+        <div className="flex flex-col gap-2">
+          <div className={`flex items-center gap-2 rounded-xl px-3 py-1.5 ${bCfg.bg}`}>
+            <span className={`h-2 w-2 rounded-full ${bCfg.dot}`} />
+            <span className={`text-xs font-semibold ${bCfg.text}`}>{bCfg.label}</span>
+          </div>
+          <div className="flex items-center gap-2 rounded-xl bg-base/60 px-3 py-1.5">
+            <Flame className="h-3.5 w-3.5 text-amber" />
+            <span className="text-xs text-text-muted"><strong className="text-text-primary">{dailyStreak}</strong>-day streak</span>
+          </div>
+        </div>
+
+        {/* Stat cards */}
+        <div className="grid flex-1 grid-cols-2 gap-2">
+          {stats.slice(0, 2).map(({ label, value, icon: Icon, color, bg }) => (
+            <div key={label} className="flex items-center gap-2 rounded-xl bg-base/60 p-2">
+              <div className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-lg ${bg}`}>
+                <Icon className={`h-3.5 w-3.5 ${color}`} />
+              </div>
+              <div>
+                <p className="text-sm font-bold leading-tight text-text-primary">{value}</p>
+                <p className="text-[10px] text-text-muted">{label}</p>
+              </div>
+            </div>
+          ))}
+          {stats.slice(2).map(({ label, value, icon: Icon, color, bg }) => (
+            <div key={label} className="flex items-center gap-2 rounded-xl bg-base/60 p-2">
+              <div className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-lg ${bg}`}>
+                <Icon className={`h-3.5 w-3.5 ${color}`} />
+              </div>
+              <div>
+                <p className="text-sm font-bold leading-tight text-text-primary">{value}</p>
+                <p className="text-[10px] text-text-muted">{label}</p>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
 
       {/* 7-day task bar chart */}
       <div>
-        <p className="mb-3 text-xs font-semibold text-text-muted uppercase tracking-wider">Tasks completed — last 7 days</p>
-        <div className="flex items-end gap-1.5 h-20">
+        <p className="mb-2 text-xs font-semibold text-text-muted uppercase tracking-wider">Tasks — last 7 days</p>
+        <div className="flex items-end gap-1.5 h-16">
           {tasksByDay.map((count, i) => {
             const heightPct = maxDay === 0 ? 0 : (count / maxDay) * 100;
             const isToday = last7[i] === todayStr();
             return (
-              <div key={i} className="flex flex-1 flex-col items-center gap-1.5">
+              <div key={i} className="flex flex-1 flex-col items-center gap-1">
                 <div className="flex w-full flex-1 items-end justify-center">
                   <motion.div
                     className="w-full rounded-t-lg"
@@ -119,13 +191,32 @@ export default function AnalyticsWidget() {
         </div>
       </div>
 
-      {/* Streak + sessions footer */}
-      <div className="flex items-center justify-between rounded-xl bg-base/60 px-4 py-2.5">
-        <span className="text-xs text-text-muted">
-          🔥 <strong className="text-text-primary">{dailyStreak}-day</strong> streak
-        </span>
+      {/* Mood trend row */}
+      {hasMood && (
+        <div>
+          <p className="mb-1.5 text-xs font-semibold text-text-muted uppercase tracking-wider">Mood — last 7 days</p>
+          <div className="flex items-center gap-1.5">
+            {moodRow.map((mood, i) => (
+              <div
+                key={i}
+                className="flex flex-1 items-center justify-center rounded-xl bg-base/60 py-1.5 text-base"
+                title={last7[i]}
+              >
+                {mood ? MOOD_EMOJIS[mood] : <span className="text-[10px] text-text-muted/40">·</span>}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Footer: sessions */}
+      <div className="mt-auto flex items-center justify-between rounded-xl bg-base/60 px-4 py-2.5">
         <span className="text-xs text-text-muted">
           🍅 <strong className="text-text-primary">{pomodoroSessions}</strong> total sessions
+        </span>
+        <span className="text-xs text-text-muted">
+          <TrendingUp className="inline h-3 w-3 mr-1 text-accent" />
+          <strong className="text-text-primary">{xp}</strong> XP
         </span>
       </div>
     </div>

@@ -10,9 +10,14 @@ import type {
   Habit,
   Bookmark,
   FocusSession,
+  DistractionEntry,
+  MoodEntry,
+  MoodLevel,
+  EnergyCheckIn,
+  FocusModeConfig,
   BadgeId,
 } from "@/types/widget";
-import { BADGE_CATALOG } from "@/types/widget";
+import { BADGE_CATALOG, FOCUS_MODE_PRESETS } from "@/types/widget";
 
 function uid(): string {
   return Math.random().toString(36).substring(2, 10) + Date.now().toString(36);
@@ -102,6 +107,18 @@ interface ContentStore {
   activeTaskId: string | null;
   autoStartPomodoro: boolean;
   focusLog: FocusSession[];
+  currentSessionId: string | null;
+
+  // Wellness
+  distractions: DistractionEntry[];
+  moodLog: MoodEntry[];
+  energyCheckIns: EnergyCheckIn[];
+  lowEffortDay: boolean;
+  lowEffortDayDate: string;
+
+  // Focus mode config
+  activeFocusMode: FocusModeConfig;
+  customFocusMode: FocusModeConfig;
 
   // Gamification
   xp: number;
@@ -137,7 +154,7 @@ interface ContentStore {
   deleteListItem: (listId: string, itemId: string) => void;
 
   // Habits
-  addHabit: (name: string, color?: string) => void;
+  addHabit: (name: string, color?: string, stackTrigger?: string) => void;
   deleteHabit: (id: string) => void;
   toggleHabitDate: (id: string, date: string) => void;
 
@@ -150,6 +167,15 @@ interface ContentStore {
   resetPomodoro: () => void;
   setActiveTask: (id: string | null) => void;
   toggleAutoStart: () => void;
+  setFocusMode: (mode: FocusModeConfig) => void;
+  setCurrentSession: (id: string | null) => void;
+  addSessionNote: (sessionId: string, notes: string) => void;
+
+  // Wellness
+  logDistraction: (note?: string) => void;
+  logMood: (mood: MoodLevel, note?: string) => void;
+  logEnergy: (level: EnergyCheckIn["level"]) => void;
+  toggleLowEffortDay: () => void;
 
   // Global
   resetAll: () => void;
@@ -170,6 +196,14 @@ const initialState = {
   activeTaskId: null as string | null,
   autoStartPomodoro: false,
   focusLog: [] as FocusSession[],
+  currentSessionId: null as string | null,
+  distractions: [] as DistractionEntry[],
+  moodLog: [] as MoodEntry[],
+  energyCheckIns: [] as EnergyCheckIn[],
+  lowEffortDay: false,
+  lowEffortDayDate: "",
+  activeFocusMode: FOCUS_MODE_PRESETS.light,
+  customFocusMode: { name: "custom", label: "Custom", workMinutes: 45, breakMinutes: 10, longBreakMinutes: 20, sessionsBeforeLongBreak: 3 } as FocusModeConfig,
   xp: 0,
   dailyStreak: 0,
   lastActiveDate: "",
@@ -297,8 +331,8 @@ export const useContentStore = create<ContentStore>()(
         set((s) => ({ lists: s.lists.map((l) => l.id === listId ? { ...l, items: l.items.filter((i) => i.id !== itemId) } : l) })),
 
       // ── Habits ──
-      addHabit: (name, color = "#5B8DEF") =>
-        set((s) => ({ habits: [...s.habits, { id: uid(), name, color, completedDates: [] }] })),
+      addHabit: (name, color = "#5B8DEF", stackTrigger) =>
+        set((s) => ({ habits: [...s.habits, { id: uid(), name, color, completedDates: [], stackTrigger }] })),
       deleteHabit: (id) =>
         set((s) => ({ habits: s.habits.filter((h) => h.id !== id) })),
       toggleHabitDate: (habitId, date) => {
@@ -327,13 +361,18 @@ export const useContentStore = create<ContentStore>()(
       // ── Pomodoro ──
       incrementPomodoro: (taskId, taskTitle) => {
         set((s) => {
-          const session: FocusSession = { date: todayStr(), taskId, taskTitle, minutes: 25 };
+          const sessionId = Math.random().toString(36).substring(2, 10) + Date.now().toString(36);
+          const workMin = s.activeFocusMode.workMinutes;
+          const session: FocusSession = { id: sessionId, date: todayStr(), taskId, taskTitle, minutes: workMin };
           const newXp = s.xp + XP_POMODORO;
           const newSessions = s.pomodoroSessions + 1;
-          const newBadges = checkBadges({ ...s, pomodoroSessions: newSessions, xp: newXp });
+          // Award deep_focus badge for 90-min session
+          const extraBadges: BadgeId[] = workMin >= 90 && !s.badges.includes("deep_focus") ? ["deep_focus"] : [];
+          const newBadges = [...checkBadges({ ...s, pomodoroSessions: newSessions, xp: newXp }), ...extraBadges];
           return {
             pomodoroSessions: newSessions,
             focusLog: [...s.focusLog, session],
+            currentSessionId: sessionId,
             xp: newXp,
             badges: [...s.badges, ...newBadges],
             recentBadge: newBadges[0] ?? s.recentBadge,
@@ -344,6 +383,66 @@ export const useContentStore = create<ContentStore>()(
       resetPomodoro: () => set({ pomodoroSessions: 0 }),
       setActiveTask: (id) => set({ activeTaskId: id }),
       toggleAutoStart: () => set((s) => ({ autoStartPomodoro: !s.autoStartPomodoro })),
+      setFocusMode: (mode) => set({ activeFocusMode: mode }),
+      setCurrentSession: (id) => set({ currentSessionId: id }),
+      addSessionNote: (sessionId, notes) =>
+        set((s) => ({
+          focusLog: s.focusLog.map((f) =>
+            f.id === sessionId ? { ...f, notes } : f
+          ),
+        })),
+
+      // ── Wellness ──
+      logDistraction: (note) =>
+        set((s) => {
+          if (!s.currentSessionId) return {};
+          const entry: DistractionEntry = {
+            id: Math.random().toString(36).substring(2, 10),
+            sessionId: s.currentSessionId,
+            timestamp: new Date().toISOString(),
+            note,
+          };
+          // Increment distractionCount on the active session
+          const focusLog = s.focusLog.map((f) =>
+            f.id === s.currentSessionId
+              ? { ...f, distractionCount: (f.distractionCount ?? 0) + 1 }
+              : f
+          );
+          return { distractions: [...s.distractions, entry], focusLog };
+        }),
+
+      logMood: (mood, note) =>
+        set((s) => {
+          const today = todayStr();
+          const id = Math.random().toString(36).substring(2, 10);
+          const entry: MoodEntry = { id, date: today, mood, note };
+          // Replace today's entry if it exists
+          const filtered = s.moodLog.filter((m) => m.date !== today);
+          // Award mood_week badge if 7+ unique days logged
+          const uniqueDays = new Set([...filtered.map(m => m.date), today]);
+          const newBadge: BadgeId[] = uniqueDays.size >= 7 && !s.badges.includes("mood_week") ? ["mood_week"] : [];
+          return {
+            moodLog: [...filtered, entry],
+            badges: [...s.badges, ...newBadge],
+            recentBadge: newBadge[0] ?? s.recentBadge,
+          };
+        }),
+
+      logEnergy: (level) =>
+        set((s) => {
+          const entry: EnergyCheckIn = {
+            id: Math.random().toString(36).substring(2, 10),
+            timestamp: new Date().toISOString(),
+            level,
+          };
+          return { energyCheckIns: [...s.energyCheckIns, entry] };
+        }),
+
+      toggleLowEffortDay: () =>
+        set((s) => ({
+          lowEffortDay: !s.lowEffortDay,
+          lowEffortDayDate: todayStr(),
+        })),
 
       resetAll: () => set(initialState),
     }),
