@@ -28,6 +28,13 @@ export interface WidgetConfig {
 
 export type TaskPriority = "low" | "medium" | "high";
 export type EnergyLevel = "low" | "medium" | "deep";
+export type TaskDensity = "comfortable" | "compact" | "ultra";
+
+export interface Subtask {
+  id: string;
+  title: string;
+  done: boolean;
+}
 
 export interface Task {
   id: string;
@@ -38,12 +45,16 @@ export interface Task {
   actualMinutes?: number;      // accumulated from FocusSessions
   energyLevel?: EnergyLevel;   // low=easy, medium=normal, deep=focus required
   dueDate?: string;            // YYYY-MM-DD
+  dueTime?: string;            // HH:MM
   createdAt: string;           // ISO
   completedAt?: string;        // ISO
   linkedNoteId?: string;
   pomodoroCount?: number;      // sessions spent on this task
   blockedBy?: string[];        // task IDs that must be done first
   projectId?: string;          // links task to a Project in goalStore
+  description?: string;        // rich text description
+  tags?: string[];             // custom tags
+  subtasks?: Subtask[];        // inline sub-items
 }
 
 export interface Note {

@@ -15,16 +15,26 @@ const GOAL_COLORS = [
 ];
 let colorCursor = 0;
 
-function ProgressBar({ value, color }: { value: number; color: string }) {
+function ProgressRing({ value, color, size = 48 }: { value: number; color: string; size?: number }) {
+  const r = (size - 8) / 2;
+  const circ = 2 * Math.PI * r;
+  const center = size / 2;
   return (
-    <div className="h-1.5 w-full overflow-hidden rounded-full bg-base">
-      <motion.div
-        className="h-full rounded-full"
-        style={{ backgroundColor: color }}
-        initial={{ width: 0 }}
-        animate={{ width: `${value}%` }}
-        transition={{ duration: 0.6, ease: "easeOut" }}
-      />
+    <div className="relative shrink-0" style={{ width: size, height: size }}>
+      <svg width={size} height={size} className="-rotate-90">
+        <circle cx={center} cy={center} r={r} fill="none" stroke="var(--color-border-muted)" strokeWidth="4" opacity="0.3" />
+        <motion.circle
+          cx={center} cy={center} r={r}
+          fill="none" stroke={color} strokeWidth="4" strokeLinecap="round"
+          strokeDasharray={circ}
+          initial={{ strokeDashoffset: circ }}
+          animate={{ strokeDashoffset: circ * (1 - value / 100) }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
+        />
+      </svg>
+      <div className="absolute inset-0 flex items-center justify-center">
+        <span className="text-[10px] font-bold tabular-nums" style={{ color }}>{value}%</span>
+      </div>
     </div>
   );
 }

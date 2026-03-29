@@ -4,11 +4,38 @@ import { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Plus, Trash2, Flame, Check, LayoutGrid, Calendar,
-  ChevronDown, Shield, TrendingUp,
+  ChevronDown, Shield, TrendingUp, Sparkles, RotateCcw,
 } from "lucide-react";
 import { useContentStore, computeForgivingStreak } from "@/store/contentStore";
 import { useHabitInsights } from "@/hooks/useHabitInsights";
 import type { Habit } from "@/types/widget";
+
+// ── Burst animation on habit completion ──
+function CompletionBurst({ color, active }: { color: string; active: boolean }) {
+  if (!active) return null;
+  return (
+    <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
+      {Array.from({ length: 8 }, (_, i) => {
+        const angle = (i / 8) * Math.PI * 2;
+        return (
+          <motion.div
+            key={i}
+            className="absolute h-2 w-2 rounded-full"
+            style={{ backgroundColor: color }}
+            initial={{ x: 0, y: 0, opacity: 1, scale: 1 }}
+            animate={{
+              x: Math.cos(angle) * 24,
+              y: Math.sin(angle) * 24,
+              opacity: 0,
+              scale: 0,
+            }}
+            transition={{ duration: 0.5, ease: "easeOut" }}
+          />
+        );
+      })}
+    </div>
+  );
+}
 
 const COLORS = ["#5B8DEF", "#5CB99A", "#E8956A", "#9B8FC4", "#E87E7E", "#6BC5D2", "#D4804A"];
 const DAYS = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"];
@@ -56,9 +83,27 @@ function HabitRow({
   onDelete: (id: string) => void;
 }) {
   const streak = computeForgivingStreak(habit.completedDates);
+  const prevStreak = habit.completedDates.length;
   const weekDone = last7.filter((d) => habit.completedDates.includes(d)).length;
   const insights = useHabitInsights(habit);
   const [showInsights, setShowInsights] = useState(false);
+  const [burstIdx, setBurstIdx] = useState<number | null>(null);
+  const [streakBounce, setStreakBounce] = useState(false);
+
+  const handleToggle = (id: string, date: string) => {
+    const wasDone = habit.completedDates.includes(date);
+    onToggle(id, date);
+    if (!wasDone && date === todayStr) {
+      setBurstIdx(last7.indexOf(date));
+      setTimeout(() => setBurstIdx(null), 600);
+      // Animate streak if incrementing
+      const newStreak = computeForgivingStreak([...habit.completedDates, date]);
+      if (newStreak > streak) {
+        setStreakBounce(true);
+        setTimeout(() => setStreakBounce(false), 600);
+      }
+    }
+  };
 
   return (
     <div className="space-y-0.5">
@@ -67,49 +112,47 @@ function HabitRow({
         <div className="flex items-center gap-2 min-w-0">
           <div className="h-2.5 w-2.5 shrink-0 rounded-full" style={{ backgroundColor: habit.color }} />
           <span className="truncate text-sm text-text-primary">{habit.name}</span>
-          {/* Streak insurance shield */}
-          <span
-            title="1 skip won't break your streak"
-            className="shrink-0 text-text-muted/50 hover:text-accent cursor-default"
-          >
+          <span title="1 skip won't break your streak" className="shrink-0 text-text-muted/50 hover:text-accent cursor-default">
             <Shield className="h-3 w-3" />
           </span>
-          {/* Insights toggle */}
-          <button
-            onClick={() => setShowInsights((v) => !v)}
-            className="shrink-0 text-text-muted/40 hover:text-accent transition-opacity opacity-0 group-hover:opacity-100"
-          >
+          <button onClick={() => setShowInsights((v) => !v)} className="shrink-0 text-text-muted/40 hover:text-accent transition-opacity opacity-0 group-hover:opacity-100">
             <TrendingUp className="h-3 w-3" />
           </button>
-          <button
-            onClick={() => onDelete(habit.id)}
-            className="shrink-0 text-text-muted opacity-0 hover:text-red-400 group-hover:opacity-100 transition-opacity"
-          >
+          <button onClick={() => onDelete(habit.id)} className="shrink-0 text-text-muted opacity-0 hover:text-red-400 group-hover:opacity-100 transition-opacity">
             <Trash2 className="h-3 w-3" />
           </button>
         </div>
 
         {/* 7-day toggle dots */}
-        {last7.map((date) => {
+        {last7.map((date, idx) => {
           const done = habit.completedDates.includes(date);
           return (
-            <motion.button
-              key={date}
-              whileHover={{ scale: 1.18 }}
-              whileTap={{ scale: 0.88 }}
-              onClick={() => onToggle(habit.id, date)}
-              className="mx-auto flex h-7 w-7 items-center justify-center rounded-full transition-all"
-              style={done ? { backgroundColor: habit.color + "20" } : { backgroundColor: "var(--color-base)" }}
-            >
-              {done && <Check className="h-3.5 w-3.5" style={{ color: habit.color }} strokeWidth={3} />}
-            </motion.button>
+            <div key={date} className="relative mx-auto flex h-7 w-7 items-center justify-center">
+              <CompletionBurst color={habit.color} active={burstIdx === idx} />
+              <motion.button
+                whileHover={{ scale: 1.18 }}
+                whileTap={{ scale: 0.88 }}
+                animate={done && burstIdx === idx ? { scale: [1, 1.3, 1] } : {}}
+                onClick={() => handleToggle(habit.id, date)}
+                className="h-full w-full flex items-center justify-center rounded-full transition-all"
+                style={done ? { backgroundColor: habit.color + "20" } : { backgroundColor: "var(--color-base)" }}
+              >
+                {done && <Check className="h-3.5 w-3.5" style={{ color: habit.color }} strokeWidth={3} />}
+              </motion.button>
+            </div>
           );
         })}
 
         {/* Streak */}
         <div className="flex items-center justify-center gap-0.5">
           {streak > 0 && <Flame className="h-3.5 w-3.5 text-amber" />}
-          <span className="text-xs font-semibold text-text-primary">{streak}</span>
+          <motion.span
+            animate={streakBounce ? { scale: [1, 1.5, 1], color: ["inherit", habit.color, "inherit"] } : {}}
+            transition={{ duration: 0.5 }}
+            className="text-xs font-semibold text-text-primary"
+          >
+            {streak}
+          </motion.span>
         </div>
       </div>
 

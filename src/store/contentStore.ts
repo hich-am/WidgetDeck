@@ -16,6 +16,8 @@ import type {
   EnergyCheckIn,
   FocusModeConfig,
   BadgeId,
+  TaskDensity,
+  Subtask,
 } from "@/types/widget";
 import { BADGE_CATALOG, FOCUS_MODE_PRESETS } from "@/types/widget";
 
@@ -134,6 +136,15 @@ interface ContentStore {
   deleteTask: (id: string) => void;
   carryOverTasks: () => void;
 
+  // Subtasks
+  addSubtask: (taskId: string, title: string) => void;
+  toggleSubtask: (taskId: string, subtaskId: string) => void;
+  deleteSubtask: (taskId: string, subtaskId: string) => void;
+
+  // Task density
+  taskDensity: TaskDensity;
+  setTaskDensity: (density: TaskDensity) => void;
+
   // Notes
   addNote: (opts?: { tags?: string[]; isJournal?: boolean; title?: string }) => void;
   updateNote: (id: string, data: Partial<Pick<Note, "title" | "content" | "tags">>) => void;
@@ -209,6 +220,7 @@ const initialState = {
   lastActiveDate: "",
   badges: [] as BadgeId[],
   recentBadge: null as BadgeId | null,
+  taskDensity: "comfortable" as TaskDensity,
 };
 
 export const useContentStore = create<ContentStore>()(
@@ -272,6 +284,48 @@ export const useContentStore = create<ContentStore>()(
             !t.done && t.dueDate === yesterday() ? { ...t, dueDate: todayStr() } : t
           ),
         })),
+
+      // ── Subtasks ──
+      addSubtask: (taskId, title) => {
+        const subtask: Subtask = {
+          id: Math.random().toString(36).substring(2, 10) + Date.now().toString(36),
+          title,
+          done: false,
+        };
+        set((s) => ({
+          tasks: s.tasks.map((t) =>
+            t.id === taskId
+              ? { ...t, subtasks: [...(t.subtasks ?? []), subtask] }
+              : t
+          ),
+        }));
+      },
+
+      toggleSubtask: (taskId, subtaskId) =>
+        set((s) => ({
+          tasks: s.tasks.map((t) =>
+            t.id === taskId
+              ? {
+                  ...t,
+                  subtasks: (t.subtasks ?? []).map((st) =>
+                    st.id === subtaskId ? { ...st, done: !st.done } : st
+                  ),
+                }
+              : t
+          ),
+        })),
+
+      deleteSubtask: (taskId, subtaskId) =>
+        set((s) => ({
+          tasks: s.tasks.map((t) =>
+            t.id === taskId
+              ? { ...t, subtasks: (t.subtasks ?? []).filter((st) => st.id !== subtaskId) }
+              : t
+          ),
+        })),
+
+      // ── Task density ──
+      setTaskDensity: (density) => set({ taskDensity: density }),
 
       // ── Notes ──
       addNote: (opts = {}) =>
