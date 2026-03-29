@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, AnimatePresence } from "framer-motion";
-import { X, CheckSquare, CalendarDays, Flame, Bell, Clock, Snooze, Trash2 } from "lucide-react";
+import { X, CheckSquare, CalendarDays, Flame, Bell, Clock, Trash2 } from "lucide-react";
 import { useDashboardStore } from "@/store/dashboardStore";
 import { useContentStore } from "@/store/contentStore";
 import { useMemo } from "react";
