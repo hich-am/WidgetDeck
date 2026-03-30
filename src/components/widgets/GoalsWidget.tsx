@@ -39,6 +39,20 @@ function ProgressRing({ value, color, size = 48 }: { value: number; color: strin
   );
 }
 
+function ProgressBar({ value, color }: { value: number; color: string }) {
+  return (
+    <div className="h-1.5 w-full overflow-hidden rounded-full bg-border-muted/30">
+      <motion.div
+        className="h-full rounded-full"
+        style={{ backgroundColor: color }}
+        initial={{ width: 0 }}
+        animate={{ width: `${value}%` }}
+        transition={{ duration: 0.8, ease: "easeOut" }}
+      />
+    </div>
+  );
+}
+
 export default function GoalsWidget() {
   const {
     goals, projects, milestones,

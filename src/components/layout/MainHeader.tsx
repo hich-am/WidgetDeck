@@ -1,21 +1,14 @@
 "use client";
 
-import { useState } from "react";
-import { motion } from "framer-motion";
 import {
   Search,
   Bell,
-  Settings,
   User,
-  LayoutGrid,
-  Columns,
-  Copy,
   Paintbrush,
 } from "lucide-react";
 import { useDashboardStore } from "@/store/dashboardStore";
 import { useContentStore } from "@/store/contentStore";
 import { useThemeStore } from "@/store/themeStore";
-import GamificationBar from "@/components/GamificationBar";
 
 function formatDate(): string {
   return new Date().toLocaleDateString("en", {
@@ -26,20 +19,11 @@ function formatDate(): string {
 }
 
 export default function MainHeader() {
-  const { openCommandPalette, openDailyReview, resetLayout } = useDashboardStore();
+  const { openCommandPalette, openDailyReview } = useDashboardStore();
   const { openThemePicker } = useThemeStore();
-  const { tasks, focusLog } = useContentStore();
-  const [activeTab, setActiveTab] = useState<"layout" | "templates" | "settings">("layout");
+  const { tasks } = useContentStore();
 
   const pendingCount = tasks.filter((t) => !t.done).length;
-
-  const todayFocusMin = focusLog
-    .filter((s) => s.date === new Date().toISOString().split("T")[0])
-    .reduce((a, s) => a + s.minutes, 0);
-  const remainingFocusHours = Math.max(0, 8 * 60 - todayFocusMin);
-  const focusText = remainingFocusHours >= 60
-    ? `${Math.floor(remainingFocusHours / 60)}h ${remainingFocusHours % 60}m`
-    : `${remainingFocusHours}m`;
 
   return (
     <header className="flex h-[72px] shrink-0 items-center justify-between border-b border-border-muted/60 bg-surface/80 px-8 backdrop-blur-xl">
@@ -47,41 +31,11 @@ export default function MainHeader() {
       <div className="flex flex-col">
         <h1 className="text-lg font-bold tracking-tight text-text-primary">Workspace</h1>
         <p className="text-xs text-text-muted">
-          {formatDate()} &middot; {pendingCount} tasks · {focusText} focus remaining
+          {formatDate()} &middot; {pendingCount} tasks pending
         </p>
       </div>
 
-      {/* Right: actions */}
       <div className="flex items-center gap-2">
-        {/* Gamification */}
-        <GamificationBar />
-
-        {/* Layout / Templates / Settings tabs */}
-        <div className="flex items-center gap-0.5 rounded-xl bg-base p-1">
-          {[
-            { key: "layout",    icon: LayoutGrid,  label: "Layout" },
-            { key: "templates", icon: Copy,         label: "Templates" },
-            { key: "settings",  icon: Settings,     label: "Settings" },
-          ].map(({ key, icon: Icon, label }) => (
-            <button
-              key={key}
-              onClick={() => {
-                setActiveTab(key as typeof activeTab);
-                if (key === "layout") resetLayout();
-                if (key === "settings") openDailyReview();
-              }}
-              className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium transition-all ${
-                activeTab === key
-                  ? "bg-surface text-text-primary shadow-sm"
-                  : "text-text-muted hover:text-text-primary"
-              }`}
-            >
-              <Icon className="h-3.5 w-3.5" />
-              {label}
-            </button>
-          ))}
-        </div>
-
         {/* Icon buttons */}
         <div className="flex items-center gap-1">
           <button

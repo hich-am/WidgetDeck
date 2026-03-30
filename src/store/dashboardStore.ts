@@ -4,7 +4,7 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import type { ResponsiveLayouts } from "react-grid-layout";
 import type { WidgetId } from "@/types/widget";
-import { ALL_WIDGET_IDS, getDefaultLayouts } from "@/config/widgets";
+import { ALL_WIDGET_IDS, getDefaultLayouts, DEFAULT_ENABLED_WIDGETS } from "@/config/widgets";
 
 export type FocusPhase = "ritual" | "focus" | "break" | "reflection";
 
@@ -80,7 +80,7 @@ export const useDashboardStore = create<DashboardStore>()(
   persist(
     (set) => ({
       layouts: getDefaultLayouts(),
-      enabledWidgets: [...ALL_WIDGET_IDS],
+      enabledWidgets: [...DEFAULT_ENABLED_WIDGETS],
       expandedWidget: null,
       commandPaletteOpen: false,
       focusModeOpen: false,
@@ -108,7 +108,7 @@ export const useDashboardStore = create<DashboardStore>()(
       resetLayout: () =>
         set({
           layouts: getDefaultLayouts(),
-          enabledWidgets: [...ALL_WIDGET_IDS],
+          enabledWidgets: [...DEFAULT_ENABLED_WIDGETS],
         }),
 
       openCommandPalette: () => set({ commandPaletteOpen: true }),

@@ -114,6 +114,8 @@ export const DEFAULT_WIDGETS: WidgetConfig[] = [
 
 export const ALL_WIDGET_IDS: WidgetId[] = DEFAULT_WIDGETS.map((w) => w.id);
 
+export const DEFAULT_ENABLED_WIDGETS: WidgetId[] = ["tasks", "notes", "pomodoro"];
+
 export function getDefaultLayouts(): ResponsiveLayouts {
   return {
     lg: DEFAULT_WIDGETS.map((w) => ({

@@ -11,6 +11,7 @@ import {
 import { useDashboardStore } from "@/store/dashboardStore";
 import { useContentStore } from "@/store/contentStore";
 import type { WidgetId } from "@/types/widget";
+import GamificationBar from "@/components/GamificationBar";
 
 const SECTIONS = [
   {
@@ -156,6 +157,13 @@ export default function Sidebar() {
         )}
       </div>
 
+      {/* Gamification */}
+      {!collapsed && (
+        <div className="flex px-3 py-2 border-b border-border-muted/40 pb-3 items-center justify-center">
+          <GamificationBar />
+        </div>
+      )}
+
       {/* Nav */}
       <div className="flex flex-1 flex-col gap-0.5 overflow-y-auto overflow-x-hidden px-2 py-3">
 
@@ -253,13 +261,6 @@ export default function Sidebar() {
               {unreadCount > 9 ? "9+" : unreadCount}
             </span>
           )}
-        </button>
-        <button
-          className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-text-muted transition-colors hover:bg-base hover:text-text-primary"
-          title={collapsed ? "Archive" : undefined}
-        >
-          <Archive className="h-4 w-4 shrink-0" />
-          {!collapsed && <span>Archive</span>}
         </button>
       </div>
 
