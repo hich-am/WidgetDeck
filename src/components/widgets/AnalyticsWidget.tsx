@@ -24,7 +24,7 @@ function getWeekRange(): { start: string; end: string } {
   return { start: start.toISOString().split("T")[0], end: end.toISOString().split("T")[0] };
 }
 
-// Mood indicator colors move from red (very low) to blue (great).
+// Mood indicator colors move from red (very low) through orange, gray, green, to blue (great).
 const MOOD_COLORS: Record<number, string> = {
   1: "#E87E7E",
   2: "#E8956A",

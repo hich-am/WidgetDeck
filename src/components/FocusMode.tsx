@@ -357,7 +357,7 @@ export default function FocusMode({
                   </div>
                 </div>
 
-                <p className="mt-6 text-xs text-text-muted">Press Escape to exit · Lightning icon logs distractions</p>
+                <p className="mt-6 text-xs text-text-muted">Press Escape to exit · Use the Log distraction button (lightning icon) to capture distractions</p>
               </motion.div>
             )}
 
