@@ -95,7 +95,8 @@ export default function DashboardGrid() {
 
   // rowHeight = (totalHeight - top/bottom padding - margins between rows) / maxRow
   const rowHeight = useMemo(() => {
-    if (!availableH) return 100;
+    if (!availableH) return MIN_ROW_HEIGHT;
+    if (!maxRow) return MIN_ROW_HEIGHT;
     const usable = availableH - PADDING_V * 2 - MARGIN * (maxRow - 1);
     return Math.max(MIN_ROW_HEIGHT, Math.floor(usable / Math.max(maxRow, 1)));
   }, [availableH, maxRow]);

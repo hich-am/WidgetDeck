@@ -14,6 +14,9 @@ import { useDashboardStore } from "@/store/dashboardStore";
 import { useContentStore, getTodayFocusMinutes, todayStr } from "@/store/contentStore";
 import type { WidgetId } from "@/types/widget";
 
+const TARGET_FOCUS_MINUTES = 120;
+const MAX_SNIPPET_LENGTH = 140;
+
 function EmptyState({ label }: { label: string }) {
   return (
     <div className="rounded-2xl border border-border-muted/60 bg-base/50 px-4 py-3 text-sm text-text-muted">
@@ -118,9 +121,7 @@ export function PomodoroPreview() {
           <div className="flex-1 rounded-full bg-base/60">
             <div
               className="h-2 rounded-full bg-accent"
-              style={{
-                width: `${Math.min(100, (todayMinutes / 120) * 100)}%`,
-              }}
+              style={{ width: `${Math.min(100, (todayMinutes / TARGET_FOCUS_MINUTES) * 100)}%` }}
             />
           </div>
         </div>
@@ -160,7 +161,8 @@ export function NotesPreview() {
   const { expandWidget } = useDashboardStore();
 
   const latest = notes.length > 0 ? notes[0] : null;
-  const snippet = latest?.content.slice(0, 140) || "Start a fresh note to capture ideas.";
+  const snippet =
+    latest?.content.slice(0, MAX_SNIPPET_LENGTH) || "Start a fresh note to capture ideas.";
 
   return (
     <div className="space-y-3">
