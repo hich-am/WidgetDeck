@@ -152,7 +152,7 @@ export default function Sidebar() {
         </div>
         {!collapsed && (
           <div className="flex flex-1 items-center">
-            <img src="/logotype.png" alt="monolith" className="h-[18px] w-auto object-contain dark:invert" />
+            <img src="/logotype.png" alt="monolith" className="h-4 w-auto object-contain dark:invert" />
           </div>
         )}
       </div>
