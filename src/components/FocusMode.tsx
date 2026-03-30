@@ -220,13 +220,13 @@ export default function FocusMode({
                         whileTap={{ scale: 0.9 }}
                         onClick={() => toggleSound(s.id)}
                         title={s.title}
-                    className={`flex h-10 w-10 items-center justify-center rounded-xl text-lg transition-all ${
-                      ambientSound === s.id ? "bg-accent/20 ring-1 ring-accent/40" : "bg-surface/60 opacity-60 hover:opacity-100"
-                    }`}
-                  >
-                    <span className="text-[11px] font-semibold">{s.label}</span>
-                  </motion.button>
-                ))}
+                        className={`flex h-10 min-w-[3.5rem] items-center justify-center rounded-xl px-3 text-[11px] font-semibold transition-all ${
+                          ambientSound === s.id ? "bg-accent/20 ring-1 ring-accent/40" : "bg-surface/60 opacity-60 hover:opacity-100"
+                        }`}
+                      >
+                        <span className="truncate">{s.label}</span>
+                      </motion.button>
+                    ))}
                     <div className="ml-auto flex items-center gap-2">
                       <VolumeX className="h-3.5 w-3.5 text-text-muted" />
                       <input
@@ -342,11 +342,11 @@ export default function FocusMode({
                     <motion.button
                       key={s.id} whileHover={{ scale: 1.15 }} whileTap={{ scale: 0.9 }}
                       onClick={() => toggleSound(s.id)} title={s.title}
-                      className={`flex h-9 w-16 items-center justify-center rounded-xl text-[11px] font-semibold transition-all ${
+                      className={`flex h-9 min-w-[3.5rem] items-center justify-center rounded-xl px-3 text-[11px] font-semibold transition-all ${
                         ambientSound === s.id ? "bg-accent/20 ring-1 ring-accent/40" : "bg-surface/60 opacity-50 hover:opacity-100"
                       }`}
                     >
-                      {s.label}
+                      <span className="truncate">{s.label}</span>
                     </motion.button>
                   ))}
                   <div className="ml-2 flex items-center gap-2">
@@ -357,7 +357,7 @@ export default function FocusMode({
                   </div>
                 </div>
 
-                <p className="mt-6 text-xs text-text-muted">Press Escape to exit · Use the log button to capture distractions</p>
+                <p className="mt-6 text-xs text-text-muted">Press Escape to exit · Use the Zap button to log a distraction</p>
               </motion.div>
             )}
 
