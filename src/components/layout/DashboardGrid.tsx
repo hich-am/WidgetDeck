@@ -14,7 +14,7 @@ import { widgetPreviewComponents } from "@/components/widgets/widgetPreviews";
 import WidgetContainer from "@/components/layout/WidgetContainer";
 import { HEADER_HEIGHT } from "@/config/layout";
 
-type LayoutWithMin = Layout & { minW?: number; minH?: number };
+type LayoutWithMinDimensions = Layout & { minW?: number; minH?: number };
 
 const MARGIN = 20; // px between cells (both axes)
 const PADDING_V = 18; // top+bottom padding inside grid
@@ -54,7 +54,7 @@ export default function DashboardGrid() {
 
   const defaultLayouts = useMemo(() => {
     const build = (key: "lg" | "md" | "sm") =>
-      new Map<WidgetId, LayoutWithMin>(
+      new Map<WidgetId, LayoutWithMinDimensions>(
         DEFAULT_WIDGETS.map((w) => [
           w.id,
           { ...w.defaultLayout[key], minW: w.minW, minH: w.minH },
@@ -69,7 +69,7 @@ export default function DashboardGrid() {
       const base = (resLayouts[key] ?? []).filter((item) =>
         visibleWidgets.includes(item.i as WidgetId)
       );
-      const baseMap = new Map<WidgetId, LayoutWithMin>(
+      const baseMap = new Map<WidgetId, LayoutWithMinDimensions>(
         base.map((item) => [item.i as WidgetId, item])
       );
 
@@ -77,7 +77,7 @@ export default function DashboardGrid() {
         const existing = baseMap.get(id);
         if (existing) return existing;
         const fallback = defaultLayouts[key].get(id as WidgetId);
-        return fallback ?? ({ i: id, x: 0, y: 0, w: 3, h: 3 } as LayoutWithMin);
+        return fallback ?? ({ i: id, x: 0, y: 0, w: 3, h: 3 } as LayoutWithMinDimensions);
       });
     };
     return {
@@ -90,7 +90,8 @@ export default function DashboardGrid() {
   // Find the max row extent used in current layout so we can size rows to fit
   const maxRow = useMemo(() => {
     const lgLayouts = filteredLayouts.lg ?? [];
-    return lgLayouts.reduce((acc, item) => Math.max(acc, item.y + item.h), 0) || 9;
+    if (lgLayouts.length === 0) return 0;
+    return lgLayouts.reduce((acc, item) => Math.max(acc, item.y + item.h), 0);
   }, [filteredLayouts]);
 
   // rowHeight = (totalHeight - top/bottom padding - margins between rows) / maxRow

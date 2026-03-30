@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { usePathname, useRouter } from "next/navigation";
 import {
@@ -152,6 +152,16 @@ export default function Sidebar() {
   const [collapsed, setCollapsed] = useState(false);
   const router = useRouter();
   const pathname = usePathname();
+  const handleNavSelect = useCallback(
+    (href: string | undefined, id: WidgetId) => {
+      if (href) {
+        router.push(href);
+      } else {
+        expandWidget(id);
+      }
+    },
+    [expandWidget, router]
+  );
 
   const unreadCount = notifications.filter((n) => !n.read).length;
 
@@ -211,13 +221,7 @@ export default function Sidebar() {
                   isActive={isActive}
                   isFavorite={true}
                   isEnabled={isEnabled}
-                  onExpand={() => {
-                    if (href) {
-                      router.push(href);
-                    } else {
-                      expandWidget(id);
-                    }
-                  }}
+                  onExpand={() => handleNavSelect(href, id)}
                   onToggleFavorite={() => toggleFavorite(id)}
                 />
               );
@@ -265,13 +269,7 @@ export default function Sidebar() {
                           isActive={isActive}
                           isFavorite={favorites.includes(id)}
                           isEnabled={isEnabled}
-                          onExpand={() => {
-                            if (href) {
-                              router.push(href);
-                            } else {
-                              expandWidget(id);
-                            }
-                          }}
+                          onExpand={() => handleNavSelect(href, id)}
                           onToggleFavorite={() => toggleFavorite(id)}
                         />
                       );

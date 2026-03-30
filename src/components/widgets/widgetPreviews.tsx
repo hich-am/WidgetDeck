@@ -14,6 +14,7 @@ import { useDashboardStore } from "@/store/dashboardStore";
 import { useContentStore, getTodayFocusMinutes, todayStr } from "@/store/contentStore";
 import type { WidgetId } from "@/types/widget";
 
+// Daily focus goal used for preview progress (2 hours)
 const TARGET_FOCUS_MINUTES = 120;
 const MAX_SNIPPET_LENGTH = 140;
 
