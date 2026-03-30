@@ -83,7 +83,7 @@ export default function TodayView() {
   const todayStr = today();
 
   // Run carry-over on mount
-  useEffect(() => { carryOverTasks(); }, []);
+  useEffect(() => { carryOverTasks(); }, [carryOverTasks]);
 
   // Today's tasks: no due date OR due today/yesterday (carried over)
   const todayTasks = useMemo(() =>
@@ -128,7 +128,7 @@ export default function TodayView() {
       {/* ── Today's Tasks ── */}
       <section className="space-y-3">
         <div className="flex items-center justify-between">
-          <h2 className="text-sm font-semibold text-text-primary">Today's Tasks</h2>
+          <h2 className="text-sm font-semibold text-text-primary">Today&apos;s Tasks</h2>
           <button
             onClick={() => expandWidget("tasks")}
             className="flex items-center gap-1 text-xs text-text-muted hover:text-accent transition-colors"
@@ -326,7 +326,7 @@ export default function TodayView() {
             <BookOpen className="h-5 w-5 text-accent" />
           </div>
           <div className="flex-1 text-left">
-            <p className="text-sm font-medium text-text-primary">Open Today's Journal</p>
+            <p className="text-sm font-medium text-text-primary">Open Today&apos;s Journal</p>
             <p className="text-xs text-text-muted">Capture your thoughts for the day</p>
           </div>
           <ChevronRight className="h-4 w-4 text-text-muted group-hover:text-accent transition-colors" />

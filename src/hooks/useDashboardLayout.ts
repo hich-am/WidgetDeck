@@ -10,7 +10,7 @@ export function useDashboardLayout() {
     useDashboardStore();
 
   const onLayoutChange = useCallback(
-    (_currentLayout: Layout, allLayouts: ResponsiveLayouts) => {
+    (_currentLayout: Layout[], allLayouts: ResponsiveLayouts) => {
       setLayouts(allLayouts);
     },
     [setLayouts]

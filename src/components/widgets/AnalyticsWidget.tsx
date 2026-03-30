@@ -34,8 +34,8 @@ const burnoutConfig = {
 
 export default function AnalyticsWidget() {
   const { tasks, focusLog, habits, pomodoroSessions, xp, dailyStreak, moodLog } = useContentStore();
-  const last7 = useMemo(getLast7Days, []);
-  const { start, end } = useMemo(getWeekRange, []);
+  const last7 = useMemo(() => getLast7Days(), []);
+  const { start, end } = useMemo(() => getWeekRange(), []);
   const { score, burnout } = useFocusScore();
 
   const tasksByDay = useMemo(() =>
