@@ -154,9 +154,9 @@ function AllCaughtUp({ onAdd }: { onAdd: () => void }) {
       <motion.div
         animate={{ rotate: [0, -10, 10, -10, 0], scale: [1, 1.2, 1] }}
         transition={{ duration: 0.6, delay: 0.2 }}
-        className="text-5xl"
+        className="text-amber"
       >
-        🎉
+        <CheckCircle2 className="h-12 w-12" />
       </motion.div>
       <div className="text-center">
         <p className="text-base font-semibold text-text-primary">You&apos;re all caught up!</p>
@@ -516,9 +516,9 @@ function ParsedChips({ parsed }: { parsed: ParsedTask }) {
 type EnergyFilter = "all" | EnergyLevel;
 const ENERGY_FILTERS: { key: EnergyFilter; label: string }[] = [
   { key: "all", label: "All" },
-  { key: "low", label: "😌 Easy" },
-  { key: "medium", label: "⚡ Normal" },
-  { key: "deep", label: "🧠 Deep" },
+  { key: "low", label: "Easy" },
+  { key: "medium", label: "Normal" },
+  { key: "deep", label: "Deep" },
 ];
 const DENSITY_LABELS: { key: TaskDensity; label: string }[] = [
   { key: "comfortable", label: "Comfortable" },
@@ -728,9 +728,9 @@ export default function TasksWidget() {
                 </div>
                 <select value={energy} onChange={(e) => setEnergy(e.target.value as Task["energyLevel"])}
                   className="rounded-xl border border-border-muted/60 bg-surface px-3 py-2 text-xs text-text-muted outline-none">
-                  <option value="low">😌 Easy</option>
-                  <option value="medium">⚡ Normal</option>
-                  <option value="deep">🧠 Deep Work</option>
+                  <option value="low">Easy</option>
+                  <option value="medium">Normal</option>
+                  <option value="deep">Deep Work</option>
                 </select>
                 <select value={duration ?? ""} onChange={(e) => setDuration(e.target.value ? Number(e.target.value) : undefined)}
                   className="rounded-xl border border-border-muted/60 bg-surface px-3 py-2 text-xs text-text-muted outline-none">

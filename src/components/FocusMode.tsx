@@ -21,11 +21,11 @@ interface Props {
 }
 
 const AMBIENT_SOUNDS = [
-  { id: "rain",       label: "🌧️", title: "Rain" },
-  { id: "whitenoise", label: "〰️", title: "White Noise" },
-  { id: "forest",     label: "🌲", title: "Forest" },
-  { id: "cafe",       label: "☕", title: "Café" },
-  { id: "lofi",       label: "🎵", title: "Lo-fi" },
+  { id: "rain",       label: "Rain",        title: "Rain" },
+  { id: "whitenoise", label: "White Noise", title: "White Noise" },
+  { id: "forest",     label: "Forest",      title: "Forest" },
+  { id: "cafe",       label: "Café",        title: "Café" },
+  { id: "lofi",       label: "Lo-fi",       title: "Lo-fi" },
 ];
 
 const INTENTIONS = [
@@ -220,13 +220,13 @@ export default function FocusMode({
                         whileTap={{ scale: 0.9 }}
                         onClick={() => toggleSound(s.id)}
                         title={s.title}
-                        className={`flex h-10 w-10 items-center justify-center rounded-xl text-lg transition-all ${
-                          ambientSound === s.id ? "bg-accent/20 ring-1 ring-accent/40" : "bg-surface/60 opacity-60 hover:opacity-100"
-                        }`}
-                      >
-                        {s.label}
-                      </motion.button>
-                    ))}
+                    className={`flex h-10 w-10 items-center justify-center rounded-xl text-lg transition-all ${
+                      ambientSound === s.id ? "bg-accent/20 ring-1 ring-accent/40" : "bg-surface/60 opacity-60 hover:opacity-100"
+                    }`}
+                  >
+                    <span className="text-[11px] font-semibold">{s.label}</span>
+                  </motion.button>
+                ))}
                     <div className="ml-auto flex items-center gap-2">
                       <VolumeX className="h-3.5 w-3.5 text-text-muted" />
                       <input
@@ -269,15 +269,13 @@ export default function FocusMode({
                   </p>
                   {activeTask && !isBreak ? (
                     <h1 className="max-w-lg text-3xl font-bold tracking-tight text-text-primary">{activeTask.title}</h1>
-                    ) : isBreak ? (
-                      <h1 className="text-2xl font-semibold text-text-muted">You&apos;ve earned it 🎉</h1>
-                    ) : (
-                      intention ? (
-                        <p className="max-w-md text-lg font-medium text-text-muted/80 italic">&ldquo;{intention}&rdquo;</p>
-                      ) : (
-                        <p className="text-text-muted">No task selected</p>
-                      )
-                    )}
+                  ) : isBreak ? (
+                    <h1 className="text-2xl font-semibold text-text-muted">You&apos;ve earned it.</h1>
+                  ) : intention ? (
+                    <p className="max-w-md text-lg font-medium text-text-muted/80 italic">&ldquo;{intention}&rdquo;</p>
+                  ) : (
+                    <p className="text-text-muted">No task selected</p>
+                  )}
                 </div>
 
                 {/* Ring timer */}
@@ -344,7 +342,7 @@ export default function FocusMode({
                     <motion.button
                       key={s.id} whileHover={{ scale: 1.15 }} whileTap={{ scale: 0.9 }}
                       onClick={() => toggleSound(s.id)} title={s.title}
-                      className={`flex h-9 w-9 items-center justify-center rounded-xl text-base transition-all ${
+                      className={`flex h-9 w-16 items-center justify-center rounded-xl text-[11px] font-semibold transition-all ${
                         ambientSound === s.id ? "bg-accent/20 ring-1 ring-accent/40" : "bg-surface/60 opacity-50 hover:opacity-100"
                       }`}
                     >
@@ -359,7 +357,7 @@ export default function FocusMode({
                   </div>
                 </div>
 
-                <p className="mt-6 text-xs text-text-muted">Press Escape to exit · ⚡ to log a distraction</p>
+                <p className="mt-6 text-xs text-text-muted">Press Escape to exit · Use the log button to capture distractions</p>
               </motion.div>
             )}
 
@@ -377,9 +375,9 @@ export default function FocusMode({
                     initial={{ scale: 0 }}
                     animate={{ scale: 1 }}
                     transition={{ type: "spring", stiffness: 300, damping: 20, delay: 0.1 }}
-                    className="mb-3 text-5xl"
+                    className="mb-3 text-5xl text-accent"
                   >
-                    🎯
+                    <Target className="h-10 w-10" />
                   </motion.div>
                   <p className="text-xs font-semibold uppercase tracking-widest text-text-muted mb-1">Session Complete!</p>
                   <h1 className="text-2xl font-bold tracking-tight text-text-primary">How did it go?</h1>
@@ -422,9 +420,12 @@ export default function FocusMode({
                         whileHover={{ scale: 1.2 }}
                         whileTap={{ scale: 0.9 }}
                         onClick={() => setFocusRating(n)}
-                        className={`text-2xl transition-all ${n <= focusRating ? "opacity-100" : "opacity-30"}`}
+                        className="transition-all"
                       >
-                        ⭐
+                        <Star
+                          className={`h-6 w-6 ${n <= focusRating ? "text-accent" : "text-text-muted/40"}`}
+                          fill={n <= focusRating ? "currentColor" : "none"}
+                        />
                       </motion.button>
                     ))}
                   </div>

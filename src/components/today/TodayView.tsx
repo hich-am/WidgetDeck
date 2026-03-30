@@ -14,6 +14,7 @@ import {
   Coffee,
   Target,
   BookOpen,
+  Flame,
 } from "lucide-react";
 import { useContentStore, computeForgivingStreak } from "@/store/contentStore";
 import { useDashboardStore } from "@/store/dashboardStore";
@@ -249,7 +250,10 @@ export default function TodayView() {
                     {habit.name}
                   </span>
                   {streak > 0 && (
-                    <span className="text-[10px] text-text-muted">🔥 {streak}</span>
+                    <span className="text-[10px] text-text-muted inline-flex items-center gap-1">
+                      <Flame className="h-3 w-3 text-amber" />
+                      {streak}
+                    </span>
                   )}
                 </motion.button>
               );

@@ -24,7 +24,13 @@ function getWeekRange(): { start: string; end: string } {
   return { start: start.toISOString().split("T")[0], end: end.toISOString().split("T")[0] };
 }
 
-const MOOD_EMOJIS: Record<number, string> = { 1: "😔", 2: "😕", 3: "😐", 4: "🙂", 5: "😄" };
+const MOOD_COLORS: Record<number, string> = {
+  1: "#E87E7E",
+  2: "#E8956A",
+  3: "#8E8EA0",
+  4: "#5CB99A",
+  5: "#5B8DEF",
+};
 
 const burnoutConfig = {
   low:    { label: "Balanced",  bg: "bg-cyan/10",   text: "text-cyan",    dot: "bg-cyan"   },
@@ -199,10 +205,17 @@ export default function AnalyticsWidget() {
             {moodRow.map((mood, i) => (
               <div
                 key={i}
-                className="flex flex-1 items-center justify-center rounded-xl bg-base/60 py-1.5 text-base"
+                className="flex flex-1 items-center justify-center rounded-xl bg-base/60 py-1.5"
                 title={last7[i]}
               >
-                {mood ? MOOD_EMOJIS[mood] : <span className="text-[10px] text-text-muted/40">·</span>}
+                {mood ? (
+                  <span
+                    className="h-2.5 w-2.5 rounded-full"
+                    style={{ backgroundColor: MOOD_COLORS[mood] }}
+                  />
+                ) : (
+                  <span className="h-2.5 w-2.5 rounded-full bg-border-muted/40" />
+                )}
               </div>
             ))}
           </div>
@@ -212,7 +225,8 @@ export default function AnalyticsWidget() {
       {/* Footer: sessions */}
       <div className="mt-auto flex items-center justify-between rounded-xl bg-base/60 px-4 py-2.5">
         <span className="text-xs text-text-muted">
-          🍅 <strong className="text-text-primary">{pomodoroSessions}</strong> total sessions
+          <Timer className="inline h-3 w-3 mr-1 text-text-muted" />
+          <strong className="text-text-primary">{pomodoroSessions}</strong> total sessions
         </span>
         <span className="text-xs text-text-muted">
           <TrendingUp className="inline h-3 w-3 mr-1 text-accent" />

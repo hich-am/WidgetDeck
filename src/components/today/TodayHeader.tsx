@@ -2,7 +2,7 @@
 
 import { useMemo } from "react";
 import { motion } from "framer-motion";
-import { Sun, Sunset, Moon } from "lucide-react";
+import { Sun, Sunset, Moon, Target } from "lucide-react";
 import { useContentStore, getTodayFocusMinutes } from "@/store/contentStore";
 import type { Task } from "@/types/widget";
 
@@ -59,8 +59,9 @@ export default function TodayHeader({ tasks }: Props) {
           {dateStr}
         </h1>
         {focusText && (
-          <p className="text-xs text-text-muted mt-0.5">
-            🎯 {focusText} focused today
+          <p className="text-xs text-text-muted mt-0.5 flex items-center gap-1">
+            <Target className="h-3 w-3" />
+            <span>{focusText} focused today</span>
           </p>
         )}
       </div>

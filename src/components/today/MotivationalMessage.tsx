@@ -11,19 +11,19 @@ const messages = {
     "You've got this. Let's make today count.",
   ],
   progress: [
-    "You're on a roll! Keep going 🔥",
+    "You're on a roll! Keep going.",
     "Great momentum — what's next?",
     "Nice work! Halfway there.",
   ],
   almostDone: [
     "So close! Just a few more to go.",
     "Almost there — finish strong!",
-    "You're crushing it today 💪",
+    "You're crushing it today.",
   ],
   done: [
-    "You did it! Everything's done for today 🎉",
-    "All tasks complete — amazing work! ✨",
-    "Today was a great day. Well done! 🌟",
+    "You did it! Everything's done for today.",
+    "All tasks complete — amazing work!",
+    "Today was a great day. Well done!",
   ],
   noTasks: [
     "Ready when you are. Add your first task!",

@@ -149,7 +149,7 @@ export default function DailyReview() {
                 onClick={handleFinish}
                 className="w-full rounded-2xl bg-accent py-3.5 text-sm font-semibold text-white shadow-sm hover:opacity-90"
               >
-                Wrap up the day ✨
+                Wrap up the day
               </motion.button>
             </div>
           </motion.div>
