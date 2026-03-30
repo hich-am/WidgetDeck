@@ -30,11 +30,17 @@ export function TasksPreview() {
   const { tasks, addTask, toggleTask } = useContentStore();
   const { expandWidget } = useDashboardStore();
 
+  const priorityWeight = (priority?: string) => {
+    if (priority === "high") return 0;
+    if (priority === "medium") return 1;
+    return 2;
+  };
+
   const openTasks = tasks.filter((t) => !t.done);
   const topTasks = useMemo(
     () =>
       [...openTasks]
-        .sort((a, b) => (a.priority || "").localeCompare(b.priority || ""))
+        .sort((a, b) => priorityWeight(a.priority) - priorityWeight(b.priority))
         .slice(0, 3),
     [openTasks]
   );
@@ -267,10 +273,14 @@ export function HabitsPreview() {
   const today = todayStr();
 
   const completedToday = habits.filter((h) => h.completedDates.includes(today)).length;
-  const total = habits.length || 1;
-  const progress = Math.round((completedToday / total) * 100);
+  const totalHabits = habits.length;
+  const progress =
+    totalHabits === 0 ? 0 : Math.round((completedToday / totalHabits) * 100);
+  const completionLabel =
+    totalHabits === 0 ? "No habits yet" : `${completedToday}/${totalHabits} done today`;
 
-  const nextHabit = habits.find((h) => !h.completedDates.includes(today));
+  const nextHabit =
+    totalHabits === 0 ? null : habits.find((h) => !h.completedDates.includes(today));
 
   return (
     <div className="space-y-4">
@@ -279,7 +289,7 @@ export function HabitsPreview() {
           <div>
             <p className="text-xs text-text-muted">Habits</p>
             <p className="text-lg font-semibold text-text-primary">
-              {completedToday}/{habits.length || 0} done today
+              {completionLabel}
             </p>
           </div>
           <span className="inline-flex items-center gap-1 rounded-full bg-amber-500/15 px-3 py-1 text-[11px] font-semibold text-amber-300">
@@ -309,7 +319,13 @@ export function HabitsPreview() {
           </div>
         </button>
       ) : (
-        <EmptyState label="All habits logged for today." />
+        <EmptyState
+          label={
+            totalHabits === 0
+              ? "Add your first habit to start tracking."
+              : "All habits logged for today."
+          }
+        />
       )}
 
       <div className="flex items-center justify-between rounded-2xl border border-border-muted/60 px-3 py-2">
