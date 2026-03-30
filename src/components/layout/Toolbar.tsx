@@ -17,6 +17,7 @@ import { useThemeStore } from "@/store/themeStore";
 import { DEFAULT_WIDGETS } from "@/config/widgets";
 import type { WidgetId } from "@/types/widget";
 import GamificationBar from "@/components/GamificationBar";
+import { HEADER_HEIGHT } from "@/config/layout";
 
 export default function Toolbar() {
   const {
@@ -41,7 +42,10 @@ export default function Toolbar() {
   }, []);
 
   return (
-    <header className="relative z-30 flex h-16 items-center justify-between border-b border-border-muted/60 bg-surface/80 px-6 backdrop-blur-xl">
+    <header
+      className="relative z-30 flex items-center justify-between border-b border-border-muted/60 bg-surface/80 px-6 backdrop-blur-xl"
+      style={{ height: HEADER_HEIGHT }}
+    >
       {/* Logo */}
       <div className="flex items-center gap-3">
         <div className="flex items-center justify-center">

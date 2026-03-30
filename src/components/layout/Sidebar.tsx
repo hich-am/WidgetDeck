@@ -12,6 +12,7 @@ import { useDashboardStore } from "@/store/dashboardStore";
 import { useContentStore } from "@/store/contentStore";
 import type { WidgetId } from "@/types/widget";
 import GamificationBar from "@/components/GamificationBar";
+import { HEADER_HEIGHT } from "@/config/layout";
 
 const SECTIONS = [
   {
@@ -146,7 +147,10 @@ export default function Sidebar() {
       }`}
     >
       {/* Logo */}
-      <div className="flex h-16 items-center gap-2.5 border-b border-border-muted/40 px-3.5">
+      <div
+        className="flex items-center gap-2.5 border-b border-border-muted/40 px-3.5"
+        style={{ height: HEADER_HEIGHT }}
+      >
         <div className="flex shrink-0 items-center justify-center">
           <img src="/logo.png" alt="monolith icon" className="h-7 w-7 object-contain" />
         </div>
@@ -267,7 +271,8 @@ export default function Sidebar() {
       {/* Collapse toggle */}
       <button
         onClick={() => setCollapsed((v) => !v)}
-        className="absolute -right-3 top-[70px] flex h-6 w-6 items-center justify-center rounded-full border border-border-muted/60 bg-surface text-text-muted shadow-sm hover:text-accent transition-colors"
+        className="absolute -right-3 flex h-6 w-6 items-center justify-center rounded-full border border-border-muted/60 bg-surface text-text-muted shadow-sm hover:text-accent transition-colors"
+        style={{ top: HEADER_HEIGHT + 6 }}
       >
         <ChevronRight className={`h-3.5 w-3.5 transition-transform duration-300 ${collapsed ? "" : "rotate-180"}`} />
       </button>

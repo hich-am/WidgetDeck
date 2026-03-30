@@ -10,9 +10,9 @@ import { useDashboardLayout } from "@/hooks/useDashboardLayout";
 import { DEFAULT_WIDGETS } from "@/config/widgets";
 import { widgetComponents } from "@/components/widgets/widgetRegistry";
 import WidgetContainer from "@/components/layout/WidgetContainer";
+import { HEADER_HEIGHT } from "@/config/layout";
 
 const MARGIN = 16;          // px between cells (both axes)
-const HEADER_H = 64;        // MainHeader height
 const PADDING_V = 12;       // top+bottom padding inside grid
 
 export default function DashboardGrid() {
@@ -25,7 +25,7 @@ export default function DashboardGrid() {
   const [availableH, setAvailableH] = useState<number>(0);
 
   useEffect(() => {
-    const calc = () => setAvailableH(window.innerHeight - HEADER_H);
+    const calc = () => setAvailableH(window.innerHeight - HEADER_HEIGHT);
     calc();
     window.addEventListener("resize", calc);
     return () => window.removeEventListener("resize", calc);

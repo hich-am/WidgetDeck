@@ -9,6 +9,7 @@ import {
 import { useDashboardStore } from "@/store/dashboardStore";
 import { useContentStore } from "@/store/contentStore";
 import { useThemeStore } from "@/store/themeStore";
+import { HEADER_HEIGHT } from "@/config/layout";
 
 function formatDate(): string {
   return new Date().toLocaleDateString("en", {
@@ -26,7 +27,10 @@ export default function MainHeader() {
   const pendingCount = tasks.filter((t) => !t.done).length;
 
   return (
-    <header className="flex h-16 shrink-0 items-center justify-between border-b border-border-muted/60 bg-surface/80 px-6 backdrop-blur-xl">
+    <header
+      className="flex shrink-0 items-center justify-between border-b border-border-muted/60 bg-surface/80 px-6 backdrop-blur-xl"
+      style={{ height: HEADER_HEIGHT }}
+    >
       {/* Left: title + subtitle */}
       <div className="flex flex-col">
         <h1 className="text-base font-bold tracking-tight text-text-primary">Workspace</h1>
