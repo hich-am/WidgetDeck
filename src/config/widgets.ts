@@ -1,6 +1,14 @@
 import type { ResponsiveLayouts } from "react-grid-layout";
 import type { WidgetConfig, WidgetId } from "@/types/widget";
 
+export const HOME_WIDGET_IDS: WidgetId[] = [
+  "tasks",
+  "pomodoro",
+  "notes",
+  "calendar",
+  "habits",
+];
+
 export const DEFAULT_WIDGETS: WidgetConfig[] = [
   {
     id: "tasks",
@@ -9,9 +17,9 @@ export const DEFAULT_WIDGETS: WidgetConfig[] = [
     minW: 3,
     minH: 3,
     defaultLayout: {
-      lg: { i: "tasks", x: 0, y: 0, w: 4, h: 5 },
-      md: { i: "tasks", x: 0, y: 0, w: 5, h: 5 },
-      sm: { i: "tasks", x: 0, y: 0, w: 6, h: 5 },
+      lg: { i: "tasks", x: 0, y: 0, w: 7, h: 6 },
+      md: { i: "tasks", x: 0, y: 0, w: 6, h: 6 },
+      sm: { i: "tasks", x: 0, y: 0, w: 6, h: 6 },
     },
   },
   {
@@ -21,9 +29,9 @@ export const DEFAULT_WIDGETS: WidgetConfig[] = [
     minW: 3,
     minH: 3,
     defaultLayout: {
-      lg: { i: "notes", x: 4, y: 0, w: 5, h: 5 },
-      md: { i: "notes", x: 5, y: 0, w: 5, h: 5 },
-      sm: { i: "notes", x: 0, y: 5, w: 6, h: 5 },
+      lg: { i: "notes", x: 0, y: 6, w: 4, h: 4 },
+      md: { i: "notes", x: 0, y: 6, w: 5, h: 4 },
+      sm: { i: "notes", x: 0, y: 11, w: 6, h: 4 },
     },
   },
   {
@@ -33,9 +41,9 @@ export const DEFAULT_WIDGETS: WidgetConfig[] = [
     minW: 3,
     minH: 4,
     defaultLayout: {
-      lg: { i: "calendar", x: 9, y: 0, w: 3, h: 5 },
-      md: { i: "calendar", x: 0, y: 5, w: 5, h: 5 },
-      sm: { i: "calendar", x: 0, y: 10, w: 6, h: 5 },
+      lg: { i: "calendar", x: 4, y: 6, w: 4, h: 4 },
+      md: { i: "calendar", x: 5, y: 6, w: 5, h: 4 },
+      sm: { i: "calendar", x: 0, y: 15, w: 6, h: 4 },
     },
   },
   {
@@ -45,9 +53,9 @@ export const DEFAULT_WIDGETS: WidgetConfig[] = [
     minW: 2,
     minH: 3,
     defaultLayout: {
-      lg: { i: "lists", x: 0, y: 5, w: 4, h: 4 },
-      md: { i: "lists", x: 5, y: 5, w: 5, h: 4 },
-      sm: { i: "lists", x: 0, y: 15, w: 6, h: 4 },
+      lg: { i: "lists", x: 0, y: 10, w: 4, h: 4 },
+      md: { i: "lists", x: 6, y: 10, w: 4, h: 4 },
+      sm: { i: "lists", x: 0, y: 23, w: 6, h: 4 },
     },
   },
   {
@@ -57,9 +65,9 @@ export const DEFAULT_WIDGETS: WidgetConfig[] = [
     minW: 2,
     minH: 3,
     defaultLayout: {
-      lg: { i: "pomodoro", x: 4, y: 5, w: 3, h: 4 },
-      md: { i: "pomodoro", x: 0, y: 9, w: 4, h: 4 },
-      sm: { i: "pomodoro", x: 0, y: 19, w: 6, h: 4 },
+      lg: { i: "pomodoro", x: 7, y: 0, w: 5, h: 6 },
+      md: { i: "pomodoro", x: 6, y: 0, w: 4, h: 6 },
+      sm: { i: "pomodoro", x: 0, y: 6, w: 6, h: 5 },
     },
   },
   {
@@ -69,9 +77,9 @@ export const DEFAULT_WIDGETS: WidgetConfig[] = [
     minW: 3,
     minH: 3,
     defaultLayout: {
-      lg: { i: "habits", x: 7, y: 5, w: 5, h: 4 },
-      md: { i: "habits", x: 4, y: 9, w: 6, h: 4 },
-      sm: { i: "habits", x: 0, y: 23, w: 6, h: 4 },
+      lg: { i: "habits", x: 8, y: 6, w: 4, h: 4 },
+      md: { i: "habits", x: 0, y: 10, w: 6, h: 4 },
+      sm: { i: "habits", x: 0, y: 19, w: 6, h: 4 },
     },
   },
   {
@@ -81,8 +89,8 @@ export const DEFAULT_WIDGETS: WidgetConfig[] = [
     minW: 2,
     minH: 2,
     defaultLayout: {
-      lg: { i: "bookmarks", x: 0, y: 9, w: 4, h: 3 },
-      md: { i: "bookmarks", x: 0, y: 13, w: 10, h: 3 },
+      lg: { i: "bookmarks", x: 4, y: 10, w: 4, h: 3 },
+      md: { i: "bookmarks", x: 0, y: 14, w: 5, h: 3 },
       sm: { i: "bookmarks", x: 0, y: 27, w: 6, h: 3 },
     },
   },
@@ -93,8 +101,8 @@ export const DEFAULT_WIDGETS: WidgetConfig[] = [
     minW: 3,
     minH: 3,
     defaultLayout: {
-      lg: { i: "analytics", x: 4, y: 9, w: 4, h: 4 },
-      md: { i: "analytics", x: 0, y: 16, w: 10, h: 4 },
+      lg: { i: "analytics", x: 8, y: 10, w: 4, h: 4 },
+      md: { i: "analytics", x: 5, y: 13, w: 5, h: 4 },
       sm: { i: "analytics", x: 0, y: 30, w: 6, h: 4 },
     },
   },
@@ -105,8 +113,8 @@ export const DEFAULT_WIDGETS: WidgetConfig[] = [
     minW: 3,
     minH: 4,
     defaultLayout: {
-      lg: { i: "goals", x: 8, y: 9, w: 4, h: 5 },
-      md: { i: "goals", x: 0, y: 20, w: 10, h: 5 },
+      lg: { i: "goals", x: 0, y: 14, w: 4, h: 5 },
+      md: { i: "goals", x: 0, y: 17, w: 10, h: 5 },
       sm: { i: "goals", x: 0, y: 34, w: 6, h: 5 },
     },
   },
@@ -114,7 +122,13 @@ export const DEFAULT_WIDGETS: WidgetConfig[] = [
 
 export const ALL_WIDGET_IDS: WidgetId[] = DEFAULT_WIDGETS.map((w) => w.id);
 
-export const DEFAULT_ENABLED_WIDGETS: WidgetId[] = ["tasks", "notes", "pomodoro"];
+export const DEFAULT_ENABLED_WIDGETS: WidgetId[] = [
+  "tasks",
+  "pomodoro",
+  "notes",
+  "calendar",
+  "habits",
+];
 
 export function getDefaultLayouts(): ResponsiveLayouts {
   return {

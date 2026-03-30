@@ -1,15 +1,25 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { usePathname, useRouter } from "next/navigation";
 import {
-  CheckSquare, FileText, CalendarDays, Flame, Timer, Bookmark,
-  List, BarChart2, Plus, HelpCircle, Archive, LayoutGrid,
-  ChevronRight, Target, Star, StarOff, ChevronDown, Bell,
-  Sparkles,
+  CheckSquare,
+  FileText,
+  CalendarDays,
+  Flame,
+  Timer,
+  Bookmark,
+  List,
+  BarChart2,
+  Plus,
+  ChevronRight,
+  Target,
+  Star,
+  ChevronDown,
+  Bell,
 } from "lucide-react";
 import { useDashboardStore } from "@/store/dashboardStore";
-import { useContentStore } from "@/store/contentStore";
 import type { WidgetId } from "@/types/widget";
 import GamificationBar from "@/components/GamificationBar";
 import { HEADER_HEIGHT } from "@/config/layout";
@@ -28,20 +38,20 @@ const SECTIONS = [
     items: [
       { id: "goals" as WidgetId, label: "Goals", icon: Target },
       { id: "habits" as WidgetId, label: "Habits", icon: Flame },
-      { id: "lists" as WidgetId, label: "Lists", icon: List },
+      { id: "lists" as WidgetId, label: "Lists", icon: List, href: "/lists" },
     ],
   },
   {
     label: "Focus",
     items: [
       { id: "pomodoro" as WidgetId, label: "Pomodoro", icon: Timer },
-      { id: "bookmarks" as WidgetId, label: "Bookmarks", icon: Bookmark },
+      { id: "bookmarks" as WidgetId, label: "Bookmarks", icon: Bookmark, href: "/bookmarks" },
     ],
   },
   {
     label: "Insights",
     items: [
-      { id: "analytics" as WidgetId, label: "Analytics", icon: BarChart2 },
+      { id: "analytics" as WidgetId, label: "Analytics", icon: BarChart2, href: "/analytics" },
     ],
   },
 ];
@@ -54,6 +64,7 @@ function NavItem({
   isActive,
   isFavorite,
   isEnabled,
+  href,
   onExpand,
   onToggleFavorite,
 }: {
@@ -64,6 +75,7 @@ function NavItem({
   isActive: boolean;
   isFavorite: boolean;
   isEnabled: boolean;
+  href?: string;
   onExpand: () => void;
   onToggleFavorite: () => void;
 }) {
@@ -79,6 +91,7 @@ function NavItem({
         whileHover={{ x: collapsed ? 0 : 2 }}
         whileTap={{ scale: 0.97 }}
         onClick={onExpand}
+        data-widget={id}
         className={`flex w-full items-center gap-2.5 rounded-xl px-2.5 py-2 text-[13px] transition-all ${
           isActive
             ? "bg-accent/10 text-accent"
@@ -99,6 +112,11 @@ function NavItem({
             {isActive && <div className="h-1.5 w-1.5 rounded-full bg-accent" />}
             {!isActive && isEnabled && (
               <ChevronRight className="h-2.5 w-2.5 text-text-muted opacity-0 transition-opacity group-hover:opacity-100" />
+            )}
+            {href && !collapsed && (
+              <span className="text-[10px] font-semibold uppercase tracking-widest text-text-muted">
+                Page
+              </span>
             )}
           </>
         )}
@@ -121,7 +139,6 @@ export default function Sidebar() {
   const {
     expandWidget,
     enabledWidgets,
-    toggleWidget,
     openCommandPalette,
     expandedWidget,
     favorites,
@@ -133,6 +150,8 @@ export default function Sidebar() {
   } = useDashboardStore();
 
   const [collapsed, setCollapsed] = useState(false);
+  const router = useRouter();
+  const pathname = usePathname();
 
   const unreadCount = notifications.filter((n) => !n.read).length;
 
@@ -178,20 +197,31 @@ export default function Sidebar() {
               <Star className="h-2.5 w-2.5 fill-amber-500 text-amber-500" />
               Favorites
             </div>
-            {favoriteItems.map(({ id, label, icon }) => (
-              <NavItem
-                key={id + "-fav"}
-                id={id}
-                label={label}
-                icon={icon}
-                collapsed={collapsed}
-                isActive={expandedWidget === id}
-                isFavorite={true}
-                isEnabled={enabledWidgets.includes(id)}
-                onExpand={() => expandWidget(id)}
-                onToggleFavorite={() => toggleFavorite(id)}
-              />
-            ))}
+            {favoriteItems.map(({ id, label, icon, href }) => {
+              const isActive = expandedWidget === id || pathname === href;
+              const isEnabled = href ? true : enabledWidgets.includes(id);
+              return (
+                <NavItem
+                  key={id + "-fav"}
+                  id={id}
+                  label={label}
+                  icon={icon}
+                  collapsed={collapsed}
+                  href={href}
+                  isActive={isActive}
+                  isFavorite={true}
+                  isEnabled={isEnabled}
+                  onExpand={() => {
+                    if (href) {
+                      router.push(href);
+                    } else {
+                      expandWidget(id);
+                    }
+                  }}
+                  onToggleFavorite={() => toggleFavorite(id)}
+                />
+              );
+            })}
             <div className="mx-3 my-2 border-t border-border-muted/30" />
           </div>
         )}
@@ -204,12 +234,12 @@ export default function Sidebar() {
               {!collapsed && (
                 <button
                   onClick={() => toggleSection(section.label)}
-                  className="flex w-full items-center gap-1.5 px-3 mb-1 text-[10px] font-semibold uppercase tracking-widest text-text-muted hover:text-text-primary transition-colors"
-                >
-                  <motion.div animate={{ rotate: isCollapsed ? -90 : 0 }} transition={{ duration: 0.15 }}>
-                    <ChevronDown className="h-3 w-3" />
-                  </motion.div>
-                  {section.label}
+                    className="flex w-full items-center gap-1.5 px-3 mb-1 text-[10px] font-semibold uppercase tracking-widest text-text-muted hover:text-text-primary transition-colors"
+                  >
+                    <motion.div animate={{ rotate: isCollapsed ? -90 : 0 }} transition={{ duration: 0.15 }}>
+                      <ChevronDown className="h-3 w-3" />
+                    </motion.div>
+                    {section.label}
                 </button>
               )}
               <AnimatePresence initial={false}>
@@ -221,20 +251,31 @@ export default function Sidebar() {
                     transition={{ duration: 0.18 }}
                     className="overflow-hidden"
                   >
-                    {section.items.map(({ id, label, icon }) => (
-                      <NavItem
-                        key={id}
-                        id={id}
-                        label={label}
-                        icon={icon}
-                        collapsed={collapsed}
-                        isActive={expandedWidget === id}
-                        isFavorite={favorites.includes(id)}
-                        isEnabled={enabledWidgets.includes(id)}
-                        onExpand={() => expandWidget(id)}
-                        onToggleFavorite={() => toggleFavorite(id)}
-                      />
-                    ))}
+                    {section.items.map(({ id, label, icon, href }) => {
+                      const isActive = expandedWidget === id || pathname === href;
+                      const isEnabled = href ? true : enabledWidgets.includes(id);
+                      return (
+                        <NavItem
+                          key={id}
+                          id={id}
+                          label={label}
+                          icon={icon}
+                          collapsed={collapsed}
+                          href={href}
+                          isActive={isActive}
+                          isFavorite={favorites.includes(id)}
+                          isEnabled={isEnabled}
+                          onExpand={() => {
+                            if (href) {
+                              router.push(href);
+                            } else {
+                              expandWidget(id);
+                            }
+                          }}
+                          onToggleFavorite={() => toggleFavorite(id)}
+                        />
+                      );
+                    })}
                   </motion.div>
                 )}
               </AnimatePresence>

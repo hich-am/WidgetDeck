@@ -12,6 +12,7 @@ import {
   Timer,
   Flame,
   Bookmark,
+  BarChart2,
 } from "lucide-react";
 import type { WidgetId } from "@/types/widget";
 import { useDashboardStore } from "@/store/dashboardStore";
@@ -24,6 +25,7 @@ const iconMap: Record<string, React.ElementType> = {
   Timer,
   Flame,
   Bookmark,
+  BarChart2,
 };
 
 interface WidgetContainerProps {
@@ -31,6 +33,9 @@ interface WidgetContainerProps {
   title: string;
   icon: string;
   children: React.ReactNode;
+  className?: string;
+  contentClassName?: string;
+  hideExpand?: boolean;
 }
 
 export default function WidgetContainer({
@@ -38,14 +43,23 @@ export default function WidgetContainer({
   title,
   icon,
   children,
+  className,
+  contentClassName,
+  hideExpand = false,
 }: WidgetContainerProps) {
   const { expandWidget, expandedWidget } = useDashboardStore();
   const IconComponent = iconMap[icon] || CheckSquare;
   const isExpanded = expandedWidget === id;
+  const containerClasses = [
+    "group relative flex h-full w-full flex-col overflow-hidden rounded-3xl border border-border-muted/50 bg-widget",
+  ];
+  if (className) containerClasses.push(className);
+  const contentClasses = ["flex-1 overflow-auto px-6 pb-6"];
+  if (contentClassName) contentClasses.push(contentClassName);
 
   return (
     <motion.div
-      className="group relative flex h-full w-full flex-col overflow-hidden rounded-3xl border border-border-muted/50 bg-widget"
+      className={containerClasses.join(" ")}
       style={{
         boxShadow: "0 2px 16px rgba(0,0,0,0.04), 0 1px 4px rgba(0,0,0,0.02)",
       }}
@@ -69,26 +83,28 @@ export default function WidgetContainer({
           </span>
         </div>
 
-        <div className="flex items-center gap-1 opacity-0 transition-opacity duration-200 group-hover:opacity-100">
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              expandWidget(id);
-            }}
-            className="rounded-xl p-1.5 text-text-muted transition-colors hover:bg-base hover:text-accent"
-            aria-label={isExpanded ? "Minimize" : "Expand"}
-          >
-            {isExpanded ? (
-              <Minimize2 className="h-3.5 w-3.5" />
-            ) : (
-              <Maximize2 className="h-3.5 w-3.5" />
-            )}
-          </button>
-        </div>
+        {!hideExpand && (
+          <div className="flex items-center gap-1 opacity-0 transition-opacity duration-200 group-hover:opacity-100">
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                expandWidget(id);
+              }}
+              className="rounded-xl p-1.5 text-text-muted transition-colors hover:bg-base hover:text-accent"
+              aria-label={isExpanded ? "Minimize" : "Expand"}
+            >
+              {isExpanded ? (
+                <Minimize2 className="h-3.5 w-3.5" />
+              ) : (
+                <Maximize2 className="h-3.5 w-3.5" />
+              )}
+            </button>
+          </div>
+        )}
       </div>
 
       {/* Content */}
-      <div className="flex-1 overflow-auto px-5 pb-5">{children}</div>
+      <div className={contentClasses.join(" ")}>{children}</div>
     </motion.div>
   );
 }
