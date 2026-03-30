@@ -31,6 +31,13 @@ const MOOD_COLORS: Record<number, string> = {
   4: "#5CB99A",
   5: "#5B8DEF",
 };
+const MOOD_LABELS: Record<number, string> = {
+  1: "Very low mood",
+  2: "Low mood",
+  3: "Neutral mood",
+  4: "Positive mood",
+  5: "Great mood",
+};
 
 const burnoutConfig = {
   low:    { label: "Balanced",  bg: "bg-cyan/10",   text: "text-cyan",    dot: "bg-cyan"   },
@@ -212,9 +219,15 @@ export default function AnalyticsWidget() {
                   <span
                     className="h-2.5 w-2.5 rounded-full"
                     style={{ backgroundColor: MOOD_COLORS[mood] }}
+                    title={MOOD_LABELS[mood]}
+                    aria-label={MOOD_LABELS[mood]}
                   />
                 ) : (
-                  <span className="h-2.5 w-2.5 rounded-full bg-border-muted/40" />
+                  <span
+                    className="h-2.5 w-2.5 rounded-full bg-border-muted/40"
+                    title="No mood logged"
+                    aria-label="No mood logged"
+                  />
                 )}
               </div>
             ))}
