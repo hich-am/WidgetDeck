@@ -78,7 +78,7 @@ function NavItem({
         whileHover={{ x: collapsed ? 0 : 2 }}
         whileTap={{ scale: 0.97 }}
         onClick={onExpand}
-        className={`flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm transition-all ${
+        className={`flex w-full items-center gap-2.5 rounded-xl px-2.5 py-2 text-[13px] transition-all ${
           isActive
             ? "bg-accent/10 text-accent"
             : isEnabled
@@ -88,7 +88,7 @@ function NavItem({
         title={collapsed ? label : undefined}
       >
         <Icon
-          className={`h-4 w-4 shrink-0 ${
+          className={`h-3.5 w-3.5 shrink-0 ${
             isActive ? "text-accent" : isEnabled ? "text-accent/70" : "text-text-muted/40"
           }`}
         />
@@ -97,7 +97,7 @@ function NavItem({
             <span className="flex-1 text-left font-medium">{label}</span>
             {isActive && <div className="h-1.5 w-1.5 rounded-full bg-accent" />}
             {!isActive && isEnabled && (
-              <ChevronRight className="h-3 w-3 text-text-muted opacity-0 transition-opacity group-hover:opacity-100" />
+              <ChevronRight className="h-2.5 w-2.5 text-text-muted opacity-0 transition-opacity group-hover:opacity-100" />
             )}
           </>
         )}
@@ -142,17 +142,17 @@ export default function Sidebar() {
   return (
     <aside
       className={`relative flex h-screen shrink-0 flex-col border-r border-border-muted/60 bg-surface/80 backdrop-blur-xl transition-all duration-300 ${
-        collapsed ? "w-16" : "w-60"
+        collapsed ? "w-16" : "w-56"
       }`}
     >
       {/* Logo */}
-      <div className="flex h-[72px] items-center gap-3 border-b border-border-muted/40 px-4">
+      <div className="flex h-16 items-center gap-2.5 border-b border-border-muted/40 px-3.5">
         <div className="flex shrink-0 items-center justify-center">
-          <img src="/logo.png" alt="monolith icon" className="h-8 w-8 object-contain" />
+          <img src="/logo.png" alt="monolith icon" className="h-7 w-7 object-contain" />
         </div>
         {!collapsed && (
           <div className="flex flex-1 items-center">
-            <img src="/logotype.png" alt="monolith" className="h-5 w-auto object-contain dark:invert" />
+            <img src="/logotype.png" alt="monolith" className="h-[18px] w-auto object-contain dark:invert" />
           </div>
         )}
       </div>
@@ -243,18 +243,18 @@ export default function Sidebar() {
       <div className="border-t border-border-muted/40 px-2 py-3 space-y-0.5">
         <button
           onClick={openCommandPalette}
-          className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-text-muted transition-colors hover:bg-base hover:text-accent"
+          className="flex w-full items-center gap-2.5 rounded-xl px-2.5 py-2 text-[13px] text-text-muted transition-colors hover:bg-base hover:text-accent"
           title={collapsed ? "Add widget" : undefined}
         >
-          <Plus className="h-4 w-4 shrink-0" />
+          <Plus className="h-3.5 w-3.5 shrink-0" />
           {!collapsed && <span>Add Widget</span>}
         </button>
         <button
           onClick={openNotificationCenter}
-          className="relative flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-text-muted transition-colors hover:bg-base hover:text-text-primary"
+          className="relative flex w-full items-center gap-2.5 rounded-xl px-2.5 py-2 text-[13px] text-text-muted transition-colors hover:bg-base hover:text-text-primary"
           title={collapsed ? "Notifications" : undefined}
         >
-          <Bell className="h-4 w-4 shrink-0" />
+          <Bell className="h-3.5 w-3.5 shrink-0" />
           {!collapsed && <span>Notifications</span>}
           {unreadCount > 0 && (
             <span className="ml-auto flex h-4 w-4 items-center justify-center rounded-full bg-accent text-[9px] font-bold text-white">
@@ -267,7 +267,7 @@ export default function Sidebar() {
       {/* Collapse toggle */}
       <button
         onClick={() => setCollapsed((v) => !v)}
-        className="absolute -right-3 top-[82px] flex h-6 w-6 items-center justify-center rounded-full border border-border-muted/60 bg-surface text-text-muted shadow-sm hover:text-accent transition-colors"
+        className="absolute -right-3 top-[70px] flex h-6 w-6 items-center justify-center rounded-full border border-border-muted/60 bg-surface text-text-muted shadow-sm hover:text-accent transition-colors"
       >
         <ChevronRight className={`h-3.5 w-3.5 transition-transform duration-300 ${collapsed ? "" : "rotate-180"}`} />
       </button>
