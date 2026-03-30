@@ -234,12 +234,12 @@ export default function Sidebar() {
               {!collapsed && (
                 <button
                   onClick={() => toggleSection(section.label)}
-                    className="flex w-full items-center gap-1.5 px-3 mb-1 text-[10px] font-semibold uppercase tracking-widest text-text-muted hover:text-text-primary transition-colors"
-                  >
-                    <motion.div animate={{ rotate: isCollapsed ? -90 : 0 }} transition={{ duration: 0.15 }}>
-                      <ChevronDown className="h-3 w-3" />
-                    </motion.div>
-                    {section.label}
+                  className="mb-1 flex w-full items-center gap-1.5 px-3 text-[10px] font-semibold uppercase tracking-widest text-text-muted transition-colors hover:text-text-primary"
+                >
+                  <motion.div animate={{ rotate: isCollapsed ? -90 : 0 }} transition={{ duration: 0.15 }}>
+                    <ChevronDown className="h-3 w-3" />
+                  </motion.div>
+                  {section.label}
                 </button>
               )}
               <AnimatePresence initial={false}>

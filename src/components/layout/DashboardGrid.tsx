@@ -18,6 +18,7 @@ type LayoutWithMin = Layout & { minW?: number; minH?: number };
 
 const MARGIN = 20; // px between cells (both axes)
 const PADDING_V = 18; // top+bottom padding inside grid
+const MIN_ROW_HEIGHT = 68; // minimum height to keep previews roomy
 
 export default function DashboardGrid() {
   const { layouts, enabledWidgets, onLayoutChange, breakpoints, cols } =
@@ -96,7 +97,7 @@ export default function DashboardGrid() {
   const rowHeight = useMemo(() => {
     if (!availableH) return 100;
     const usable = availableH - PADDING_V * 2 - MARGIN * (maxRow - 1);
-    return Math.max(68, Math.floor(usable / Math.max(maxRow, 1)));
+    return Math.max(MIN_ROW_HEIGHT, Math.floor(usable / Math.max(maxRow, 1)));
   }, [availableH, maxRow]);
 
   return (

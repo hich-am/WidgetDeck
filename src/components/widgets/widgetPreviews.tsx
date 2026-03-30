@@ -159,7 +159,7 @@ export function NotesPreview() {
   const { notes, addNote } = useContentStore();
   const { expandWidget } = useDashboardStore();
 
-  const latest = notes[0];
+  const latest = notes.length > 0 ? notes[0] : null;
   const snippet = latest?.content.slice(0, 140) || "Start a fresh note to capture ideas.";
 
   return (

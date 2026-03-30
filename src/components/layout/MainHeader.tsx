@@ -1,5 +1,6 @@
 "use client";
 
+import { useMemo } from "react";
 import { Search, Bell, User, Paintbrush, Flame, Clock3, Target, ArrowRight } from "lucide-react";
 import { useDashboardStore } from "@/store/dashboardStore";
 import { useContentStore, getTodayFocusMinutes, todayStr } from "@/store/contentStore";
@@ -18,11 +19,15 @@ export default function MainHeader() {
   const { openCommandPalette, openDailyReview, expandWidget } = useDashboardStore();
   const { openThemePicker } = useThemeStore();
   const { tasks, focusLog, dailyStreak } = useContentStore();
+  const today = todayStr();
 
-  const pendingCount = tasks.filter((t) => !t.done).length;
-  const completedToday = tasks.filter(
-    (t) => t.done && (t.completedAt ?? "").startsWith(todayStr())
-  ).length;
+  const { pendingCount, completedToday } = useMemo(() => {
+    const pending = tasks.filter((t) => !t.done).length;
+    const completed = tasks.filter(
+      (t) => t.done && (t.completedAt ?? "").startsWith(today)
+    ).length;
+    return { pendingCount: pending, completedToday: completed };
+  }, [tasks, today]);
   const todayFocus = getTodayFocusMinutes(focusLog);
   const progressTotal = pendingCount + completedToday;
   const progress = progressTotal === 0 ? 0 : Math.round((completedToday / progressTotal) * 100);
