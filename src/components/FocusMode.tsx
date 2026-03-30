@@ -305,7 +305,7 @@ export default function FocusMode({
                     whileHover={{ scale: 1.06 }} whileTap={{ scale: 0.94 }}
                     onClick={onToggle}
                     className={`flex items-center gap-2.5 rounded-2xl px-8 py-3.5 text-base font-semibold transition-colors ${
-                      isRunning ? "bg-amber/10 text-amber" : "bg-accent/10 text-accent"
+                      isRunning ? "bg-amber/10 text-amber-500" : "bg-accent/10 text-accent"
                     }`}
                   >
                     {isRunning ? <><Pause className="h-5 w-5" /> Pause</> : <><Play className="h-5 w-5" /> Resume</>}
@@ -318,7 +318,7 @@ export default function FocusMode({
                       whileHover={{ scale: 1.06 }} whileTap={{ scale: 0.94 }}
                       onClick={handleDistraction}
                       animate={distractFlash ? { scale: [1, 1.2, 1] } : {}}
-                      className="flex items-center gap-2 rounded-2xl bg-amber/10 px-4 py-3.5 text-amber transition-colors hover:bg-amber/15"
+                      className="flex items-center gap-2 rounded-2xl bg-amber/10 px-4 py-3.5 text-amber-500 transition-colors hover:bg-amber/15"
                       title="Log distraction"
                     >
                       <Zap className="h-5 w-5" />
@@ -357,7 +357,7 @@ export default function FocusMode({
                   </div>
                 </div>
 
-                <p className="mt-6 text-xs text-text-muted">Press Escape to exit · Use the lightning button to log a distraction</p>
+                <p className="mt-6 text-xs text-text-muted">Press Escape to exit · Lightning icon logs distractions</p>
               </motion.div>
             )}
 
@@ -375,7 +375,7 @@ export default function FocusMode({
                     initial={{ scale: 0 }}
                     animate={{ scale: 1 }}
                     transition={{ type: "spring", stiffness: 300, damping: 20, delay: 0.1 }}
-                    className="mb-3 text-5xl text-accent"
+                    className="mb-3 text-accent"
                   >
                     <Target className="h-10 w-10" />
                   </motion.div>

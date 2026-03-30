@@ -41,8 +41,8 @@ const MOOD_LABELS: Record<number, string> = {
 };
 
 const burnoutConfig = {
-  low:    { label: "Balanced",  bg: "bg-cyan/10",   text: "text-cyan",    dot: "bg-cyan"   },
-  medium: { label: "Watch out", bg: "bg-amber/10",  text: "text-amber",   dot: "bg-amber"  },
+  low:    { label: "Balanced",  bg: "bg-cyan/10",   text: "text-cyan-500",    dot: "bg-cyan-500"   },
+  medium: { label: "Watch out", bg: "bg-amber/10",  text: "text-amber-500",   dot: "bg-amber-500"  },
   high:   { label: "Burnout risk", bg: "bg-red-400/10", text: "text-red-400", dot: "bg-red-400" },
 };
 
@@ -82,7 +82,7 @@ export default function AnalyticsWidget() {
   const stats = [
     { label: "Tasks done",  value: weekTasks,          icon: CheckCircle2, color: "text-accent",   bg: "bg-accent/8" },
     { label: "Focus time",  value: focusHours > 0 ? `${focusHours}h ${focusMins}m` : `${focusMins}m`, icon: Timer, color: "text-cyan", bg: "bg-cyan/8" },
-    { label: "Habit rate",  value: `${habitConsistency}%`, icon: Flame, color: "text-amber", bg: "bg-amber/8" },
+    { label: "Habit rate",  value: `${habitConsistency}%`, icon: Flame, color: "text-amber-500", bg: "bg-amber/8" },
     { label: "Total XP",    value: xp,                 icon: Zap,         color: "text-lavender", bg: "bg-lavender/8" },
   ];
 
@@ -141,7 +141,7 @@ export default function AnalyticsWidget() {
             <span className={`text-xs font-semibold ${bCfg.text}`}>{bCfg.label}</span>
           </div>
           <div className="flex items-center gap-2 rounded-xl bg-base/60 px-3 py-1.5">
-            <Flame className="h-3.5 w-3.5 text-amber" />
+            <Flame className="h-3.5 w-3.5 text-amber-500" />
             <span className="text-xs text-text-muted"><strong className="text-text-primary">{dailyStreak}</strong>-day streak</span>
           </div>
         </div>

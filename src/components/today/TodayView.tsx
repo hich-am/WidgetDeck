@@ -251,7 +251,7 @@ export default function TodayView() {
                   </span>
                   {streak > 0 && (
                     <span className="text-[10px] text-text-muted inline-flex items-center gap-1">
-                      <Flame className="h-3 w-3 text-amber" />
+                      <Flame className="h-3 w-3 text-amber-500" />
                       {streak}
                     </span>
                   )}
@@ -304,7 +304,7 @@ export default function TodayView() {
               <button
                 onClick={() => pomodoro.setRunning((r) => !r)}
                 className={`flex items-center gap-1.5 rounded-xl px-3.5 py-1.5 text-sm font-medium transition-colors ${
-                  pomodoro.running ? "bg-amber/10 text-amber" : "bg-accent/10 text-accent"
+                  pomodoro.running ? "bg-amber/10 text-amber-500" : "bg-accent/10 text-accent"
                 }`}
               >
                 {pomodoro.running ? <><Pause className="h-3.5 w-3.5" /> Pause</> : <><Play className="h-3.5 w-3.5" /> Start</>}

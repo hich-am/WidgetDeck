@@ -154,7 +154,7 @@ function AllCaughtUp({ onAdd }: { onAdd: () => void }) {
       <motion.div
         animate={{ rotate: [0, -10, 10, -10, 0], scale: [1, 1.2, 1] }}
         transition={{ duration: 0.6, delay: 0.2 }}
-        className="text-amber"
+        className="text-amber-500"
       >
         <CheckCircle2 className="h-12 w-12" />
       </motion.div>
@@ -422,7 +422,7 @@ function TaskRow({
             {(task.tags ?? []).map((tag) => (
               <span key={tag} className="text-[9px] font-medium text-accent/70">#{tag}</span>
             ))}
-            {aging === "aging" && !task.done && <span className="text-[10px] text-amber font-medium">Aging</span>}
+            {aging === "aging" && !task.done && <span className="text-[10px] text-amber-500 font-medium">Aging</span>}
             {aging === "neglected" && !task.done && <span className="text-[10px] text-red-400 font-medium">Neglected</span>}
             {subProgress && !task.done && (
               <span className="text-[10px] text-text-muted">{subProgress.done}/{subProgress.total} subtasks</span>

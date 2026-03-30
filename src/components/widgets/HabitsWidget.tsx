@@ -145,7 +145,7 @@ function HabitRow({
 
         {/* Streak */}
         <div className="flex items-center justify-center gap-0.5">
-          {streak > 0 && <Flame className="h-3.5 w-3.5 text-amber" />}
+          {streak > 0 && <Flame className="h-3.5 w-3.5 text-amber-500" />}
           <motion.span
             animate={streakBounce ? { scale: [1, 1.5, 1], color: ["inherit", habit.color, "inherit"] } : {}}
             transition={{ duration: 0.5 }}
@@ -224,7 +224,7 @@ function HeatmapView({ habit, heatmapWeeks, todayStr }: { habit: Habit; heatmapW
         <div className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: habit.color }} />
         <span className="text-sm font-medium text-text-primary">{habit.name}</span>
         <span className="ml-auto text-[11px] text-text-muted flex items-center gap-1">
-          <Flame className="h-3 w-3 text-amber" /> {streak}
+          <Flame className="h-3 w-3 text-amber-500" /> {streak}
         </span>
       </div>
       <div className="flex gap-0.5 overflow-x-auto pb-1">
@@ -343,7 +343,7 @@ export default function HabitsWidget() {
               <div key={d} className="text-center text-[10px] font-medium text-text-muted">{getDayLabel(d)}</div>
             ))}
             <div className="text-center text-[10px] font-medium text-text-muted">
-              <Flame className="mx-auto h-3 w-3 text-amber" />
+              <Flame className="mx-auto h-3 w-3 text-amber-500" />
             </div>
           </div>
 

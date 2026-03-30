@@ -90,7 +90,7 @@ export default function DailyReview() {
               {missedTasks.length > 0 && (
                 <section>
                   <h3 className="mb-3 flex items-center gap-2 text-sm font-semibold text-text-primary">
-                    <Clock className="h-4 w-4 text-amber" />
+                    <Clock className="h-4 w-4 text-amber-500" />
                     Unfinished · {missedTasks.length}
                   </h3>
                   <ul className="space-y-1.5">
