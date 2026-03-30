@@ -279,8 +279,8 @@ export default function HabitsWidget() {
   const [colorIdx, setColorIdx] = useState(0);
   const [viewMode, setViewMode] = useState<"week" | "heatmap">("week");
 
-  const last7 = useMemo(getLast7Days, []);
-  const heatmapWeeks = useMemo(getLast16WeekDates, []);
+  const last7 = useMemo(() => getLast7Days(), []);
+  const heatmapWeeks = useMemo(() => getLast16WeekDates(), []);
   const todayStr = new Date().toISOString().split("T")[0];
 
   const handleAdd = () => {

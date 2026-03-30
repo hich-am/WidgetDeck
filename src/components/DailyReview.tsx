@@ -112,7 +112,7 @@ export default function DailyReview() {
               {/* Tomorrow's top 3 */}
               <section>
                 <h3 className="mb-3 text-sm font-semibold text-text-primary">
-                  Tomorrow's top 3 priorities
+                  Tomorrow&apos;s top 3 priorities
                 </h3>
                 <div className="space-y-2">
                   {top3.map((val, i) => (

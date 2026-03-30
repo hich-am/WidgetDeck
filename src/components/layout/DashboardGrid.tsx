@@ -5,7 +5,7 @@ import {
   ResponsiveGridLayout,
   useContainerWidth,
 } from "react-grid-layout";
-import type { ResponsiveLayouts } from "react-grid-layout";
+import type { Layout, ResponsiveLayouts } from "react-grid-layout";
 import { useDashboardLayout } from "@/hooks/useDashboardLayout";
 import { DEFAULT_WIDGETS } from "@/config/widgets";
 import { widgetComponents } from "@/components/widgets/widgetRegistry";
@@ -65,8 +65,8 @@ export default function DashboardGrid() {
           rowHeight={rowHeight}
           margin={[MARGIN, MARGIN] as const}
           containerPadding={[0, 0] as const}
-          onLayoutChange={(_currentLayout: any, allLayouts: any) => {
-            onLayoutChange(_currentLayout, allLayouts as ResponsiveLayouts);
+          onLayoutChange={(currentLayout: Layout[], allLayouts: ResponsiveLayouts) => {
+            onLayoutChange(currentLayout, allLayouts);
           }}
           dragConfig={{ handle: ".widget-drag-handle" }}
         >

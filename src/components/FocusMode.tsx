@@ -269,15 +269,15 @@ export default function FocusMode({
                   </p>
                   {activeTask && !isBreak ? (
                     <h1 className="max-w-lg text-3xl font-bold tracking-tight text-text-primary">{activeTask.title}</h1>
-                  ) : isBreak ? (
-                    <h1 className="text-2xl font-semibold text-text-muted">You&apos;ve earned it 🎉</h1>
-                  ) : (
-                    intention ? (
-                      <p className="max-w-md text-lg font-medium text-text-muted/80 italic">"{intention}"</p>
+                    ) : isBreak ? (
+                      <h1 className="text-2xl font-semibold text-text-muted">You&apos;ve earned it 🎉</h1>
                     ) : (
-                      <p className="text-text-muted">No task selected</p>
-                    )
-                  )}
+                      intention ? (
+                        <p className="max-w-md text-lg font-medium text-text-muted/80 italic">&ldquo;{intention}&rdquo;</p>
+                      ) : (
+                        <p className="text-text-muted">No task selected</p>
+                      )
+                    )}
                 </div>
 
                 {/* Ring timer */}
@@ -408,7 +408,7 @@ export default function FocusMode({
                     }`}
                   >
                     {markComplete ? <CheckCircle2 className="h-5 w-5" /> : <Target className="h-5 w-5" />}
-                    Mark "{activeTask.title}" as complete
+                    Mark &ldquo;{activeTask.title}&rdquo; as complete
                   </button>
                 )}
 

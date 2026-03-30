@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useRef, useCallback, useEffect } from "react";
+import { useState, useMemo, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Plus, Trash2, Circle, CheckCircle2, CalendarDays, Zap, Brain, Battery,
@@ -112,15 +112,20 @@ const agingBorder: Record<AgingState, string> = {
   fresh: "", aging: "border-l-2 border-amber", neglected: "border-l-2 border-red-400",
 };
 
+const CONFETTI_DOTS = Array.from({ length: 12 }, (_, i) => {
+  const radius = 40 + (i % 3) * 10;
+  return {
+    i,
+    x: Math.cos((i / 12) * Math.PI * 2) * radius,
+    y: Math.sin((i / 12) * Math.PI * 2) * radius,
+    color: ["#5B8DEF", "#5CB99A", "#E8956A", "#9B8FC4", "#E87E7E", "#F59E0B"][i % 6],
+  };
+});
+
 // ─── Confetti ──────────────────────────────────────────────────────────────
 function MiniConfetti({ active }: { active: boolean }) {
+  const dots = CONFETTI_DOTS;
   if (!active) return null;
-  const dots = Array.from({ length: 12 }, (_, i) => ({
-    i,
-    x: Math.cos((i / 12) * Math.PI * 2) * (40 + Math.random() * 30),
-    y: Math.sin((i / 12) * Math.PI * 2) * (40 + Math.random() * 30),
-    color: ["#5B8DEF","#5CB99A","#E8956A","#9B8FC4","#E87E7E","#F59E0B"][i % 6],
-  }));
   return (
     <div className="pointer-events-none absolute inset-0 flex items-center justify-center z-10">
       {dots.map(({ i, x, y, color }) => (
@@ -532,7 +537,7 @@ export default function TasksWidget() {
   const [showMeta, setShowMeta] = useState(false);
   const [showWhatNext, setShowWhatNext] = useState(false);
   const [energyFilter, setEnergyFilter] = useState<EnergyFilter>("all");
-  const [peekTask, setPeekTask] = useState<Task | null>(null);
+  const [peekTaskId, setPeekTaskId] = useState<string | null>(null);
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const [showDensity, setShowDensity] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -572,12 +577,20 @@ export default function TasksWidget() {
   const pending = sorted.filter((t) => !t.done);
   const done = sorted.filter((t) => t.done);
   const suggestion = suggestions[0];
+  const peekTask = useMemo(
+    () => tasks.find((t) => t.id === peekTaskId) ?? null,
+    [tasks, peekTaskId]
+  );
 
   // Bulk actions
   const toggleSelect = (id: string) => {
     setSelectedIds((prev) => {
       const next = new Set(prev);
-      next.has(id) ? next.delete(id) : next.add(id);
+      if (next.has(id)) {
+        next.delete(id);
+      } else {
+        next.add(id);
+      }
       return next;
     });
   };
@@ -590,15 +603,6 @@ export default function TasksWidget() {
     selectedIds.forEach((id) => deleteTask(id));
     clearSelection();
   };
-
-  // Update peek task when tasks change
-  useEffect(() => {
-    if (peekTask) {
-      const updated = tasks.find((t) => t.id === peekTask.id);
-      if (updated) setPeekTask(updated);
-      else setPeekTask(null);
-    }
-  }, [tasks]);
 
   const density = taskDensity;
 
@@ -774,7 +778,7 @@ export default function TasksWidget() {
                 task={task}
                 onToggle={toggleTask}
                 onDelete={deleteTask}
-                onPeek={setPeekTask}
+                onPeek={(t) => setPeekTaskId(t.id)}
                 density={density}
                 selected={selectedIds.has(task.id)}
                 onSelect={toggleSelect}
@@ -793,7 +797,7 @@ export default function TasksWidget() {
                 task={task}
                 onToggle={toggleTask}
                 onDelete={deleteTask}
-                onPeek={setPeekTask}
+                onPeek={(t) => setPeekTaskId(t.id)}
                 density={density}
                 selected={selectedIds.has(task.id)}
                 onSelect={toggleSelect}
@@ -811,7 +815,7 @@ export default function TasksWidget() {
       <AnimatePresence>
         {peekTask && (
           <div className="w-1/2 min-w-0 overflow-hidden">
-            <TaskPeekPanel task={peekTask} onClose={() => setPeekTask(null)} />
+            <TaskPeekPanel task={peekTask} onClose={() => setPeekTaskId(null)} />
           </div>
         )}
       </AnimatePresence>
