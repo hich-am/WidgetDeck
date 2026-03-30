@@ -145,7 +145,7 @@ function HabitRow({
 
         {/* Streak */}
         <div className="flex items-center justify-center gap-0.5">
-          {streak > 0 && <Flame className="h-3.5 w-3.5 text-amber" />}
+          {streak > 0 && <Flame className="h-3.5 w-3.5 text-amber-500" />}
           <motion.span
             animate={streakBounce ? { scale: [1, 1.5, 1], color: ["inherit", habit.color, "inherit"] } : {}}
             transition={{ duration: 0.5 }}
@@ -224,7 +224,7 @@ function HeatmapView({ habit, heatmapWeeks, todayStr }: { habit: Habit; heatmapW
         <div className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: habit.color }} />
         <span className="text-sm font-medium text-text-primary">{habit.name}</span>
         <span className="ml-auto text-[11px] text-text-muted flex items-center gap-1">
-          <Flame className="h-3 w-3 text-amber" /> {streak}
+          <Flame className="h-3 w-3 text-amber-500" /> {streak}
         </span>
       </div>
       <div className="flex gap-0.5 overflow-x-auto pb-1">
@@ -342,7 +342,9 @@ export default function HabitsWidget() {
             {last7.map((d) => (
               <div key={d} className="text-center text-[10px] font-medium text-text-muted">{getDayLabel(d)}</div>
             ))}
-            <div className="text-center text-[10px] font-medium text-text-muted">🔥</div>
+            <div className="text-center text-[10px] font-medium text-text-muted">
+              <Flame className="mx-auto h-3 w-3 text-amber-500" />
+            </div>
           </div>
 
           <div className="flex-1 space-y-3 overflow-auto">
@@ -354,7 +356,7 @@ export default function HabitsWidget() {
             {Array.from(stacks.entries()).map(([trigger, stackHabits]) => (
               <div key={trigger} className="space-y-1.5">
                 <div className="flex items-center gap-1.5 text-[10px] font-semibold text-text-muted uppercase tracking-wide">
-                  <span>⚡</span>
+                  <Sparkles className="h-3 w-3" />
                   <span>{trigger}</span>
                 </div>
                 <div className="space-y-1.5 pl-2 border-l-2 border-border-muted/40">
@@ -425,7 +427,7 @@ export default function HabitsWidget() {
               <input
                 value={newTrigger}
                 onChange={(e) => setNewTrigger(e.target.value)}
-                placeholder="⚡ Stack trigger (optional): e.g. After morning coffee"
+                placeholder="Stack trigger (optional): e.g. After morning coffee"
                 className="w-full rounded-xl border border-border-muted/60 bg-surface px-3 py-2 text-xs text-text-primary placeholder-text-muted/70 outline-none focus:border-accent/40"
               />
             </motion.div>

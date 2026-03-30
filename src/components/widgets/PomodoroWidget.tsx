@@ -167,7 +167,7 @@ export default function PomodoroWidget() {
       <div className="flex items-center gap-2">
         <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}
           onClick={() => setIsRunning((r) => !r)}
-          className={`flex items-center gap-2 rounded-2xl px-5 py-2.5 text-sm font-medium ${isRunning ? "bg-amber/10 text-amber" : "bg-accent/10 text-accent"}`}
+          className={`flex items-center gap-2 rounded-2xl px-5 py-2.5 text-sm font-medium ${isRunning ? "bg-amber/10 text-amber-500" : "bg-accent/10 text-accent"}`}
         >
           {isRunning ? <><Pause className="h-4 w-4" /> Pause</> : <><Play className="h-4 w-4" /> Start</>}
         </motion.button>

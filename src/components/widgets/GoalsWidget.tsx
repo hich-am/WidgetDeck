@@ -160,7 +160,7 @@ export default function GoalsWidget() {
                 </span>
                 <button
                   onClick={() => archiveGoal(goal.id)}
-                  className="shrink-0 text-text-muted/40 opacity-0 hover:text-amber group-hover:opacity-100 transition-opacity"
+                  className="shrink-0 text-text-muted/40 opacity-0 hover:text-amber-500 group-hover:opacity-100 transition-opacity"
                   title="Archive"
                 >
                   <Flag className="h-3 w-3" />

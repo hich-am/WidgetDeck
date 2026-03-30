@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { Award, Flame } from "lucide-react";
 import { useContentStore } from "@/store/contentStore";
 import { BADGE_CATALOG } from "@/types/widget";
 
@@ -24,8 +25,9 @@ export default function GamificationBar() {
       {/* Inline bar in toolbar */}
       <div className="flex items-center gap-3 rounded-2xl bg-base px-3 py-1.5">
         {dailyStreak > 0 && (
-          <span className="flex items-center gap-1 text-xs font-semibold text-amber">
-            🔥 {dailyStreak}
+          <span className="flex items-center gap-1 text-xs font-semibold text-amber-500">
+            <Flame className="h-3.5 w-3.5" />
+            {dailyStreak}
           </span>
         )}
         <div className="flex items-center gap-1.5">
@@ -41,8 +43,12 @@ export default function GamificationBar() {
           <span className="text-[10px] text-text-muted">{xpInLevel}/100</span>
         </div>
         {badges.length > 0 && (
-          <span className="text-sm" title={`${badges.length} badge${badges.length > 1 ? "s" : ""} earned`}>
-            {BADGE_CATALOG[badges[badges.length - 1]]?.icon ?? "⭐"}
+          <span
+            className="flex items-center gap-1 text-xs text-text-muted"
+            title={`${badges.length} badge${badges.length > 1 ? "s" : ""} earned`}
+          >
+            <Award className="h-3.5 w-3.5 text-accent" />
+            <span>{BADGE_CATALOG[badges[badges.length - 1]]?.name ?? "Badge"}</span>
           </span>
         )}
       </div>
@@ -57,7 +63,7 @@ export default function GamificationBar() {
             exit={{ opacity: 0, y: 10, scale: 0.95 }}
             transition={{ type: "spring", stiffness: 300, damping: 25 }}
           >
-            <span className="text-2xl">{badge.icon}</span>
+            <Award className="h-8 w-8 text-accent" />
             <div>
               <p className="text-sm font-semibold text-text-primary">Badge unlocked!</p>
               <p className="text-xs text-text-muted">{badge.name} — {badge.description}</p>

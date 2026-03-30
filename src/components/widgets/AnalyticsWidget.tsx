@@ -24,11 +24,25 @@ function getWeekRange(): { start: string; end: string } {
   return { start: start.toISOString().split("T")[0], end: end.toISOString().split("T")[0] };
 }
 
-const MOOD_EMOJIS: Record<number, string> = { 1: "😔", 2: "😕", 3: "😐", 4: "🙂", 5: "😄" };
+// Mood indicator colors move from red (very low) through orange, gray, green, to blue (great).
+const MOOD_COLORS: Record<number, string> = {
+  1: "#E87E7E",
+  2: "#E8956A",
+  3: "#8E8EA0",
+  4: "#5CB99A",
+  5: "#5B8DEF",
+};
+const MOOD_LABELS: Record<number, string> = {
+  1: "Very low mood",
+  2: "Low mood",
+  3: "Neutral mood",
+  4: "Positive mood",
+  5: "Great mood",
+};
 
 const burnoutConfig = {
-  low:    { label: "Balanced",  bg: "bg-cyan/10",   text: "text-cyan",    dot: "bg-cyan"   },
-  medium: { label: "Watch out", bg: "bg-amber/10",  text: "text-amber",   dot: "bg-amber"  },
+  low:    { label: "Balanced",  bg: "bg-cyan/10",   text: "text-cyan-500",    dot: "bg-cyan-500"   },
+  medium: { label: "Watch out", bg: "bg-amber/10",  text: "text-amber-500",   dot: "bg-amber-500"  },
   high:   { label: "Burnout risk", bg: "bg-red-400/10", text: "text-red-400", dot: "bg-red-400" },
 };
 
@@ -68,7 +82,7 @@ export default function AnalyticsWidget() {
   const stats = [
     { label: "Tasks done",  value: weekTasks,          icon: CheckCircle2, color: "text-accent",   bg: "bg-accent/8" },
     { label: "Focus time",  value: focusHours > 0 ? `${focusHours}h ${focusMins}m` : `${focusMins}m`, icon: Timer, color: "text-cyan", bg: "bg-cyan/8" },
-    { label: "Habit rate",  value: `${habitConsistency}%`, icon: Flame, color: "text-amber", bg: "bg-amber/8" },
+    { label: "Habit rate",  value: `${habitConsistency}%`, icon: Flame, color: "text-amber-500", bg: "bg-amber/8" },
     { label: "Total XP",    value: xp,                 icon: Zap,         color: "text-lavender", bg: "bg-lavender/8" },
   ];
 
@@ -127,7 +141,7 @@ export default function AnalyticsWidget() {
             <span className={`text-xs font-semibold ${bCfg.text}`}>{bCfg.label}</span>
           </div>
           <div className="flex items-center gap-2 rounded-xl bg-base/60 px-3 py-1.5">
-            <Flame className="h-3.5 w-3.5 text-amber" />
+            <Flame className="h-3.5 w-3.5 text-amber-500" />
             <span className="text-xs text-text-muted"><strong className="text-text-primary">{dailyStreak}</strong>-day streak</span>
           </div>
         </div>
@@ -199,10 +213,23 @@ export default function AnalyticsWidget() {
             {moodRow.map((mood, i) => (
               <div
                 key={i}
-                className="flex flex-1 items-center justify-center rounded-xl bg-base/60 py-1.5 text-base"
+                className="flex flex-1 items-center justify-center rounded-xl bg-base/60 py-1.5"
                 title={last7[i]}
               >
-                {mood ? MOOD_EMOJIS[mood] : <span className="text-[10px] text-text-muted/40">·</span>}
+                {mood ? (
+                  <span
+                    className="h-2.5 w-2.5 rounded-full"
+                    style={{ backgroundColor: MOOD_COLORS[mood] }}
+                    title={MOOD_LABELS[mood]}
+                    aria-label={MOOD_LABELS[mood]}
+                  />
+                ) : (
+                  <span
+                    className="h-2.5 w-2.5 rounded-full bg-border-muted/40"
+                    title="No mood logged"
+                    aria-label="No mood logged"
+                  />
+                )}
               </div>
             ))}
           </div>
@@ -212,7 +239,8 @@ export default function AnalyticsWidget() {
       {/* Footer: sessions */}
       <div className="mt-auto flex items-center justify-between rounded-xl bg-base/60 px-4 py-2.5">
         <span className="text-xs text-text-muted">
-          🍅 <strong className="text-text-primary">{pomodoroSessions}</strong> total sessions
+          <Timer className="inline h-3 w-3 mr-1 text-text-muted" />
+          <strong className="text-text-primary">{pomodoroSessions}</strong> total sessions
         </span>
         <span className="text-xs text-text-muted">
           <TrendingUp className="inline h-3 w-3 mr-1 text-accent" />

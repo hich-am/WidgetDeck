@@ -106,10 +106,10 @@ function NavItem({
       {!collapsed && hovered && (
         <button
           onClick={(e) => { e.stopPropagation(); onToggleFavorite(); }}
-          className="absolute right-9 top-1/2 -translate-y-1/2 text-text-muted/30 hover:text-amber transition-colors"
+          className="absolute right-9 top-1/2 -translate-y-1/2 text-text-muted/30 hover:text-amber-500 transition-colors"
           title={isFavorite ? "Unpin" : "Pin to favorites"}
         >
-          {isFavorite ? <Star className="h-3 w-3 fill-amber text-amber" /> : <Star className="h-3 w-3" />}
+          {isFavorite ? <Star className="h-3 w-3 fill-amber-500 text-amber-500" /> : <Star className="h-3 w-3" />}
         </button>
       )}
     </motion.div>
@@ -171,7 +171,7 @@ export default function Sidebar() {
         {!collapsed && favoriteItems.length > 0 && (
           <div className="mb-2">
             <div className="flex items-center gap-1.5 mb-1 px-3 text-[10px] font-semibold uppercase tracking-widest text-text-muted">
-              <Star className="h-2.5 w-2.5 fill-amber text-amber" />
+              <Star className="h-2.5 w-2.5 fill-amber-500 text-amber-500" />
               Favorites
             </div>
             {favoriteItems.map(({ id, label, icon }) => (
