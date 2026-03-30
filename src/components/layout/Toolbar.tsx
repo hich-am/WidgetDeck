@@ -17,6 +17,7 @@ import { useThemeStore } from "@/store/themeStore";
 import { DEFAULT_WIDGETS } from "@/config/widgets";
 import type { WidgetId } from "@/types/widget";
 import GamificationBar from "@/components/GamificationBar";
+import { HEADER_HEIGHT } from "@/config/layout";
 
 export default function Toolbar() {
   const {
@@ -41,14 +42,17 @@ export default function Toolbar() {
   }, []);
 
   return (
-    <header className="relative z-30 flex h-[72px] items-center justify-between border-b border-border-muted/60 bg-surface/80 px-8 backdrop-blur-xl">
+    <header
+      className="relative z-30 flex items-center justify-between border-b border-border-muted/60 bg-surface/80 px-6 backdrop-blur-xl"
+      style={{ height: HEADER_HEIGHT }}
+    >
       {/* Logo */}
       <div className="flex items-center gap-3">
         <div className="flex items-center justify-center">
-          <img src="/logo.png" alt="monolith icon" className="h-9 w-9 object-contain" />
+          <img src="/logo.png" alt="monolith icon" className="h-8 w-8 object-contain" />
         </div>
         <div className="flex items-center">
-          <img src="/logotype.png" alt="monolith" className="h-6 w-auto object-contain dark:invert" />
+          <img src="/logotype.png" alt="monolith" className="h-5 w-auto object-contain dark:invert" />
         </div>
       </div>
 
@@ -61,27 +65,27 @@ export default function Toolbar() {
         <button
           onClick={openDailyReview}
           title="Daily Review (R)"
-          className="flex items-center gap-2 rounded-2xl px-4 py-2.5 text-sm font-medium text-text-muted transition-colors hover:bg-base hover:text-accent"
+          className="flex items-center gap-1.5 rounded-2xl px-3.5 py-2 text-sm font-medium text-text-muted transition-colors hover:bg-base hover:text-accent"
         >
-          <Sparkles className="h-4 w-4" />
+          <Sparkles className="h-3.5 w-3.5" />
           Review
         </button>
 
         {/* Command Palette */}
         <button
           onClick={openCommandPalette}
-          className="flex items-center gap-2.5 rounded-2xl border border-border-muted/60 px-4 py-2.5 text-sm text-text-muted transition-all hover:border-accent/30 hover:text-text-primary hover:shadow-sm"
+          className="flex items-center gap-2 rounded-2xl border border-border-muted/60 px-3.5 py-2 text-sm text-text-muted transition-all hover:border-accent/30 hover:text-text-primary hover:shadow-sm"
         >
           <Command className="h-3.5 w-3.5" />
           <span>Search...</span>
-          <kbd className="ml-2 rounded-lg bg-base px-1.5 py-0.5 text-[10px] text-text-muted">⌘K</kbd>
+          <kbd className="ml-1.5 rounded-lg bg-base px-1.5 py-0.5 text-[10px] text-text-muted">⌘K</kbd>
         </button>
 
         {/* Widget Manager */}
         <div className="relative" ref={menuRef}>
           <button
             onClick={() => setShowWidgetMenu((prev) => !prev)}
-            className="flex items-center gap-2 rounded-2xl px-4 py-2.5 text-sm font-medium text-text-muted transition-colors hover:bg-base hover:text-text-primary"
+            className="flex items-center gap-1.5 rounded-2xl px-3.5 py-2 text-sm font-medium text-text-muted transition-colors hover:bg-base hover:text-text-primary"
           >
             <Grid2X2 className="h-4 w-4" />
             Widgets
@@ -94,20 +98,20 @@ export default function Toolbar() {
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 exit={{ opacity: 0, y: -4, scale: 0.96 }}
                 transition={{ duration: 0.15 }}
-                className="absolute right-0 top-full mt-2 w-56 overflow-hidden rounded-2xl border border-border-muted/60 bg-widget shadow-lg"
-                style={{ boxShadow: "0 12px 32px rgba(0,0,0,0.06)" }}
-              >
-                <div className="px-4 py-3 text-xs font-semibold uppercase tracking-widest text-text-muted">
-                  Toggle Widgets
-                </div>
+                 className="absolute right-0 top-full mt-2 w-56 overflow-hidden rounded-2xl border border-border-muted/60 bg-widget shadow-lg"
+                 style={{ boxShadow: "0 12px 32px rgba(0,0,0,0.06)" }}
+               >
+                 <div className="px-4 py-2.5 text-xs font-semibold uppercase tracking-widest text-text-muted">
+                   Toggle Widgets
+                 </div>
                 {DEFAULT_WIDGETS.map((w) => {
                   const isEnabled = enabledWidgets.includes(w.id);
                   return (
-                    <button key={w.id} onClick={() => toggleWidget(w.id as WidgetId)}
-                      className="flex w-full items-center justify-between px-4 py-3 text-sm text-text-primary transition-colors hover:bg-base">
-                      <span>{w.title}</span>
-                      {isEnabled && <Check className="h-4 w-4 text-accent" />}
-                    </button>
+                   <button key={w.id} onClick={() => toggleWidget(w.id as WidgetId)}
+                     className="flex w-full items-center justify-between px-4 py-2.5 text-sm text-text-primary transition-colors hover:bg-base">
+                     <span>{w.title}</span>
+                     {isEnabled && <Check className="h-4 w-4 text-accent" />}
+                   </button>
                   );
                 })}
               </motion.div>
@@ -117,15 +121,15 @@ export default function Toolbar() {
 
         {/* Theme Picker */}
         <button onClick={openThemePicker}
-          className="flex items-center gap-2 rounded-2xl px-4 py-2.5 text-sm font-medium text-text-muted transition-colors hover:bg-base hover:text-accent">
-          <Paintbrush className="h-4 w-4" />
+          className="flex items-center gap-1.5 rounded-2xl px-3.5 py-2 text-sm font-medium text-text-muted transition-colors hover:bg-base hover:text-accent">
+          <Paintbrush className="h-3.5 w-3.5" />
           Theme
         </button>
 
         {/* Reset */}
         <button onClick={resetLayout}
-          className="flex items-center gap-2 rounded-2xl px-4 py-2.5 text-sm font-medium text-text-muted transition-colors hover:bg-base hover:text-coral">
-          <RotateCcw className="h-4 w-4" />
+          className="flex items-center gap-1.5 rounded-2xl px-3.5 py-2 text-sm font-medium text-text-muted transition-colors hover:bg-base hover:text-coral">
+          <RotateCcw className="h-3.5 w-3.5" />
           Reset
         </button>
       </div>

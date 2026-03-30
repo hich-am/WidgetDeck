@@ -9,6 +9,7 @@ import {
 import { useDashboardStore } from "@/store/dashboardStore";
 import { useContentStore } from "@/store/contentStore";
 import { useThemeStore } from "@/store/themeStore";
+import { HEADER_HEIGHT } from "@/config/layout";
 
 function formatDate(): string {
   return new Date().toLocaleDateString("en", {
@@ -26,47 +27,50 @@ export default function MainHeader() {
   const pendingCount = tasks.filter((t) => !t.done).length;
 
   return (
-    <header className="flex h-[72px] shrink-0 items-center justify-between border-b border-border-muted/60 bg-surface/80 px-8 backdrop-blur-xl">
+    <header
+      className="flex shrink-0 items-center justify-between border-b border-border-muted/60 bg-surface/80 px-6 backdrop-blur-xl"
+      style={{ height: HEADER_HEIGHT }}
+    >
       {/* Left: title + subtitle */}
       <div className="flex flex-col">
-        <h1 className="text-lg font-bold tracking-tight text-text-primary">Workspace</h1>
-        <p className="text-xs text-text-muted">
+        <h1 className="text-base font-bold tracking-tight text-text-primary">Workspace</h1>
+        <p className="text-[11px] text-text-muted">
           {formatDate()} &middot; {pendingCount} tasks pending
         </p>
       </div>
 
       <div className="flex items-center gap-2">
         {/* Icon buttons */}
-        <div className="flex items-center gap-1">
+        <div className="flex items-center gap-1.5">
           <button
             onClick={openThemePicker}
-            className="flex h-9 w-9 items-center justify-center rounded-xl text-text-muted transition-colors hover:bg-base hover:text-accent"
+            className="flex h-8 w-8 items-center justify-center rounded-xl text-text-muted transition-colors hover:bg-base hover:text-accent"
             title="Themes"
           >
-            <Paintbrush className="h-4 w-4" />
+            <Paintbrush className="h-3.5 w-3.5" />
           </button>
           <button
             onClick={openCommandPalette}
-            className="flex h-9 w-9 items-center justify-center rounded-xl text-text-muted transition-colors hover:bg-base hover:text-accent"
+            className="flex h-8 w-8 items-center justify-center rounded-xl text-text-muted transition-colors hover:bg-base hover:text-accent"
             title="Search (⌘K)"
           >
-            <Search className="h-4 w-4" />
+            <Search className="h-3.5 w-3.5" />
           </button>
           <button
             onClick={openDailyReview}
-            className="relative flex h-9 w-9 items-center justify-center rounded-xl text-text-muted transition-colors hover:bg-base hover:text-accent"
+            className="relative flex h-8 w-8 items-center justify-center rounded-xl text-text-muted transition-colors hover:bg-base hover:text-accent"
             title="Review (R)"
           >
-            <Bell className="h-4 w-4" />
+            <Bell className="h-3.5 w-3.5" />
             {pendingCount > 0 && (
-              <span className="absolute right-1.5 top-1.5 h-1.5 w-1.5 rounded-full bg-accent" />
+              <span className="absolute right-1 top-1 h-1.5 w-1.5 rounded-full bg-accent" />
             )}
           </button>
           <button
-            className="flex h-9 w-9 items-center justify-center rounded-xl bg-accent/10 text-accent transition-colors hover:bg-accent/15"
+            className="flex h-8 w-8 items-center justify-center rounded-xl bg-accent/10 text-accent transition-colors hover:bg-accent/15"
             title="Profile"
           >
-            <User className="h-4 w-4" />
+            <User className="h-3.5 w-3.5" />
           </button>
         </div>
       </div>

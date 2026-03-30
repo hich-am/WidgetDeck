@@ -61,10 +61,10 @@ export default function WidgetContainer({
       transition={{ type: "spring", stiffness: 280, damping: 28 }}
     >
       {/* Header / Drag Handle */}
-      <div className="widget-drag-handle flex h-14 shrink-0 cursor-grab items-center justify-between px-6 active:cursor-grabbing">
-        <div className="flex items-center gap-2.5">
-          <IconComponent className="h-4 w-4 text-accent" />
-          <span className="text-[15px] font-semibold tracking-tight text-text-primary">
+      <div className="widget-drag-handle flex h-12 shrink-0 cursor-grab items-center justify-between px-5 active:cursor-grabbing">
+        <div className="flex items-center gap-2">
+          <IconComponent className="h-3.5 w-3.5 text-accent" />
+          <span className="text-sm font-semibold tracking-tight text-text-primary">
             {title}
           </span>
         </div>
@@ -75,20 +75,20 @@ export default function WidgetContainer({
               e.stopPropagation();
               expandWidget(id);
             }}
-            className="rounded-xl p-2 text-text-muted transition-colors hover:bg-base hover:text-accent"
+            className="rounded-xl p-1.5 text-text-muted transition-colors hover:bg-base hover:text-accent"
             aria-label={isExpanded ? "Minimize" : "Expand"}
           >
             {isExpanded ? (
-              <Minimize2 className="h-4 w-4" />
+              <Minimize2 className="h-3.5 w-3.5" />
             ) : (
-              <Maximize2 className="h-4 w-4" />
+              <Maximize2 className="h-3.5 w-3.5" />
             )}
           </button>
         </div>
       </div>
 
       {/* Content */}
-      <div className="flex-1 overflow-auto px-6 pb-6">{children}</div>
+      <div className="flex-1 overflow-auto px-5 pb-5">{children}</div>
     </motion.div>
   );
 }

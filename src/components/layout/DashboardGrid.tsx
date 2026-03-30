@@ -10,10 +10,10 @@ import { useDashboardLayout } from "@/hooks/useDashboardLayout";
 import { DEFAULT_WIDGETS } from "@/config/widgets";
 import { widgetComponents } from "@/components/widgets/widgetRegistry";
 import WidgetContainer from "@/components/layout/WidgetContainer";
+import { HEADER_HEIGHT } from "@/config/layout";
 
-const MARGIN = 20;          // px between cells (both axes)
-const HEADER_H = 72;        // MainHeader height
-const PADDING_V = 16;       // top+bottom padding inside grid
+const MARGIN = 16;          // px between cells (both axes)
+const PADDING_V = 12;       // top+bottom padding inside grid
 
 export default function DashboardGrid() {
   const { layouts, enabledWidgets, onLayoutChange, breakpoints, cols } =
@@ -25,7 +25,7 @@ export default function DashboardGrid() {
   const [availableH, setAvailableH] = useState<number>(0);
 
   useEffect(() => {
-    const calc = () => setAvailableH(window.innerHeight - HEADER_H);
+    const calc = () => setAvailableH(window.innerHeight - HEADER_HEIGHT);
     calc();
     window.addEventListener("resize", calc);
     return () => window.removeEventListener("resize", calc);
@@ -46,7 +46,7 @@ export default function DashboardGrid() {
   const rowHeight = useMemo(() => {
     if (!availableH) return 100;
     const usable = availableH - PADDING_V * 2 - MARGIN * (maxRow - 1);
-    return Math.max(60, Math.floor(usable / maxRow));
+    return Math.max(56, Math.floor(usable / maxRow));
   }, [availableH, maxRow]);
 
   return (
