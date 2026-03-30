@@ -24,7 +24,7 @@ export default function MainHeader() {
   const { pendingCount, completedToday } = useMemo(() => {
     const pending = tasks.filter((t) => !t.done).length;
     const completed = tasks.filter(
-      (t) => t.done && (t.completedAt ?? "").startsWith(today)
+      (t) => t.done && Boolean(t.completedAt && t.completedAt.startsWith(today))
     ).length;
     return { pendingCount: pending, completedToday: completed };
   }, [tasks, today]);

@@ -126,7 +126,9 @@ export function PomodoroPreview() {
           </div>
         </div>
         <p className="mt-1 text-[11px] text-text-muted">
-          {pomodoroSessions} pomodoro{pomodoroSessions === 1 ? "" : "s"} logged
+          {pomodoroSessions === 0
+            ? "No pomodoros logged yet"
+            : `${pomodoroSessions} pomodoro${pomodoroSessions === 1 ? "" : "s"} logged`}
         </p>
       </div>
 
@@ -161,8 +163,13 @@ export function NotesPreview() {
   const { expandWidget } = useDashboardStore();
 
   const latest = notes.length > 0 ? notes[0] : null;
+  const snippetSource = latest?.content ?? "";
   const snippet =
-    latest?.content.slice(0, MAX_SNIPPET_LENGTH) || "Start a fresh note to capture ideas.";
+    snippetSource.length === 0
+      ? "Start a fresh note to capture ideas."
+      : snippetSource.length > MAX_SNIPPET_LENGTH
+        ? `${snippetSource.slice(0, MAX_SNIPPET_LENGTH)}...`
+        : snippetSource;
 
   return (
     <div className="space-y-3">
