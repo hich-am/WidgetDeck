@@ -18,7 +18,7 @@ type LayoutWithMinDimensions = Layout & { minW?: number; minH?: number };
 
 const MARGIN = 20; // px between cells (both axes)
 const PADDING_V = 18; // top+bottom padding inside grid
-const MIN_ROW_HEIGHT = 68; // minimum height to keep previews roomy
+const MIN_ROW_HEIGHT = 68; // keeps preview cards spacious with the 20px grid margin on desktop
 
 export default function DashboardGrid() {
   const { layouts, enabledWidgets, onLayoutChange, breakpoints, cols } =
@@ -37,13 +37,14 @@ export default function DashboardGrid() {
   }, []);
 
   const visibleWidgets = useMemo(() => {
-    const filtered = enabledWidgets.filter((id) => HOME_WIDGET_IDS.includes(id));
-    if (filtered.length === 0) return HOME_WIDGET_IDS;
-    const filled = [...filtered];
+    const baseline = enabledWidgets.filter((id) => HOME_WIDGET_IDS.includes(id));
+    const filled = baseline.length > 0 ? [...baseline] : [...HOME_WIDGET_IDS];
+
     for (const id of HOME_WIDGET_IDS) {
       if (filled.length >= HOME_WIDGET_IDS.length) break;
       if (!filled.includes(id)) filled.push(id);
     }
+
     return filled.slice(0, HOME_WIDGET_IDS.length);
   }, [enabledWidgets]);
 

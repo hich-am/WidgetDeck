@@ -3,9 +3,16 @@
 import { useMemo } from "react";
 import { Search, Bell, User, Paintbrush, Flame, Clock3, Target, ArrowRight } from "lucide-react";
 import { useDashboardStore } from "@/store/dashboardStore";
-import { useContentStore, getTodayFocusMinutes, todayStr } from "@/store/contentStore";
+import {
+  useContentStore,
+  getTodayFocusMinutes,
+  todayStr as getTodayDateString,
+} from "@/store/contentStore";
 import { useThemeStore } from "@/store/themeStore";
 import { HEADER_HEIGHT } from "@/config/layout";
+
+const MORNING_END_HOUR = 12;
+const AFTERNOON_END_HOUR = 17;
 
 function formatDate(): string {
   return new Date().toLocaleDateString("en", {
@@ -19,7 +26,7 @@ export default function MainHeader() {
   const { openCommandPalette, openDailyReview, expandWidget } = useDashboardStore();
   const { openThemePicker } = useThemeStore();
   const { tasks, focusLog, dailyStreak } = useContentStore();
-  const today = todayStr();
+  const today = getTodayDateString();
 
   const { pendingCount, completedToday } = useMemo(() => {
     const pending = tasks.filter((t) => !t.done).length;
@@ -34,7 +41,11 @@ export default function MainHeader() {
 
   const hour = new Date().getHours();
   const greeting =
-    hour < 12 ? "Good morning" : hour < 17 ? "Good afternoon" : "Good evening";
+    hour < MORNING_END_HOUR
+      ? "Good morning"
+      : hour < AFTERNOON_END_HOUR
+        ? "Good afternoon"
+        : "Good evening";
 
   return (
     <header

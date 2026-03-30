@@ -11,10 +11,14 @@ import {
 } from "lucide-react";
 import { useMemo } from "react";
 import { useDashboardStore } from "@/store/dashboardStore";
-import { useContentStore, getTodayFocusMinutes, todayStr } from "@/store/contentStore";
+import {
+  useContentStore,
+  getTodayFocusMinutes,
+  todayStr as getTodayDateString,
+} from "@/store/contentStore";
 import type { WidgetId } from "@/types/widget";
 
-// Daily focus goal used for preview progress (2 hours)
+// Daily focus goal used for preview progress (2 hours, a gentle default that avoids overloading)
 const TARGET_FOCUS_MINUTES = 120;
 const MAX_SNIPPET_LENGTH = 140;
 
@@ -55,7 +59,7 @@ export function TasksPreview() {
           </p>
         </div>
         <button
-          onClick={() => addTask("Quick task", "medium", todayStr())}
+          onClick={() => addTask("Quick task", "medium", getTodayDateString())}
           className="inline-flex items-center gap-2 rounded-xl bg-accent/10 px-3 py-2 text-xs font-semibold text-accent transition hover:bg-accent/15"
         >
           <ListTodo className="h-3.5 w-3.5" />
@@ -218,7 +222,7 @@ export function CalendarPreview() {
   const { events, addEvent } = useContentStore();
   const { expandWidget } = useDashboardStore();
 
-  const today = todayStr();
+  const today = getTodayDateString();
   const nextEvent = useMemo(() => {
     return [...events]
       .filter((e) => e.date >= today)
@@ -270,7 +274,7 @@ export function CalendarPreview() {
 export function HabitsPreview() {
   const { habits, toggleHabitDate, dailyStreak } = useContentStore();
   const { expandWidget } = useDashboardStore();
-  const today = todayStr();
+  const today = getTodayDateString();
 
   const completedToday = habits.filter((h) => h.completedDates.includes(today)).length;
   const totalHabits = habits.length;
